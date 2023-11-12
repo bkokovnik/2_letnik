@@ -55,7 +55,7 @@ Uy2_2_err = unumpy.uarray(Uy2_2, np.ones(np.shape(Uy2_2)) * 0.5) * np.pi / 180
 
 
 Uy2_err = unumpy.uarray(np.mean( np.array([Uy2_1, Uy2_2]), axis=0 ), np.ones(np.shape(Ux2)) * 0.5) * np.pi / 180
-# Uy2_err = unumpy.uarray(np.array([29, 45, 60, 9, 24, 60, 78]), np.ones(np.shape(Ux2)) * 0.2)
+# Uy2_err = unumpy.uarray(np.array([29, 45, 60, 9, 24, 60, 78]), np.ones(np.shape(Ux2)) * 0.2) * np.pi / 180
 
 y2 = Uy2_err
 x2 = Ux2_err
@@ -83,8 +83,8 @@ B_z_p = const.mu_0 / (unumpy.tan(y2) * 4 * np.pi * (x2 ** 3))
 
 
 # Sample data as a uarray with values and absolute uncertainties
-values = unumpy.nominal_values(B_z_p)[:-8]
-abs_uncertainties = unumpy.std_devs(B_z_p)[:-8]
+values = unumpy.nominal_values(B_z_p)
+abs_uncertainties = unumpy.std_devs(B_z_p)
 
 # Calculate relative uncertainties
 relative_uncertainties = abs_uncertainties / values
@@ -105,7 +105,7 @@ print("Weighted Average: ", weighted_sum / total_weight)
 print("Uncertainty of Weighted Average: ", uncertainty_of_weighted_average)
 B_z_p_nekaj = np.average(unumpy.nominal_values(B_z_p)[:-8])
 
-print("B_z z omejenimi podatki: ", np.sqrt(B_z_p_nekaj * unc.nominal_value(p_krat_B)), ", negotovost: ", np.std(unumpy.nominal_values(B_z_p)[:-8]))
+print("B_z z omejenimi podatki: ", np.sqrt(B_z_p_nekaj * unc.nominal_value(p_krat_B)), ", negotovost: ", np.std(unumpy.nominal_values(B_z_p[:-8])))
 print("B_z z oteženim povprečjem: ", np.sqrt(B_z_p_avg * unc.nominal_value(p_krat_B)))
 
 print("Recimo da končni B_z: ", np.sqrt(weighted_sum / total_weight * unc.nominal_value(p_krat_B)), ", z relativno negotovostjo: ", np.sqrt(uncertainty_of_weighted_average ** 2 + (unc.std_dev(p_krat_B) / unc.nominal_value(p_krat_B)) ** 2), 
