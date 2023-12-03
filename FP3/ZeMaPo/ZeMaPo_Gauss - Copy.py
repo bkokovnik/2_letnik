@@ -56,7 +56,6 @@ Uy2_2_err = unumpy.uarray(Uy2_2, np.ones(np.shape(Uy2_2)) * 0.5) * np.pi / 180
 
 
 Uy2_err = unumpy.uarray(np.mean( np.array([Uy2_1, Uy2_2]), axis=0 ), np.ones(np.shape(Ux2)) * 0.5)  * np.pi / 180
-print(Uy2_err)
 # Uy2_err = unumpy.uarray(np.array([29, 45, 60, 9, 24, 60, 78]), np.ones(np.shape(Ux2)) * 0.2)
 
 y2 = Uy2_err
@@ -72,14 +71,12 @@ J = J_n + J_p
 print("Vztr. mom.: ", J, J_p, J_n)
 
 p_krat_B = om**2 * J
-print(p_krat_B)
 
 B_z_p = const.mu_0 / (unumpy.tan(y2) * 4 * np.pi * (x2 ** 3))
 
 ena_z_r_kub = 1 / (x2 ** 3)
 tan_kota = unumpy.tan(y2)
 
-print(tan_kota)
 
 ##### Napake
 
@@ -171,5 +168,3 @@ print(pcov2)
 
 print(k_err)
 print("Naklon: ", optimizedParameters2)
-print(om * umath.sqrt((const.mu_0 * J) / (4 * np.pi * k_err)))
-print(om)

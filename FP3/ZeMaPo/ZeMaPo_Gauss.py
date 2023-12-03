@@ -202,7 +202,7 @@ plt.errorbar(unumpy.nominal_values(x2), unumpy.nominal_values(B_z_p), yerr=unump
 plt.xlabel('$r$ [cm]')
 plt.ylabel('$B/p$ [enote]')
 
-
+plt.ylim(0,1.5*10**(-5))
 # xlim_spodnja = np.min(x2)
 # xlim_zgornja = np.max(y2)
 # ylim_spodnja = np.min(y2)
