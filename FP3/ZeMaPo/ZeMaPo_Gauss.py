@@ -111,7 +111,8 @@ print("B_z z oteženim povprečjem: ", np.sqrt(B_z_p_avg * unc.nominal_value(p_k
 print("Recimo da končni B_z: ", np.sqrt(weighted_sum / total_weight * unc.nominal_value(p_krat_B)), ", z relativno negotovostjo: ", np.sqrt(uncertainty_of_weighted_average ** 2 + (unc.std_dev(p_krat_B) / unc.nominal_value(p_krat_B)) ** 2), 
       " in absolutno negotovostjo: ", np.sqrt(uncertainty_of_weighted_average ** 2 + (unc.std_dev(p_krat_B) / unc.nominal_value(p_krat_B)) ** 2) * np.sqrt(weighted_sum / total_weight * unc.nominal_value(p_krat_B)))
 
-print("p z omejenimi podatki: ", np.sqrt((B_z_p_nekaj ** (-1)) * unc.nominal_value(p_krat_B)))
+print("p z omejenimi podatki: ", np.sqrt((B_z_p_avg ** (-1)) * unc.nominal_value(p_krat_B)))
+print("B/p: ", B_z_p_avg, uncertainty_of_weighted_average * B_z_p_avg)
 
 
 
@@ -200,7 +201,7 @@ plt.plot(unumpy.nominal_values(x2), np.ones(np.shape(unumpy.nominal_values(x2)))
 plt.errorbar(unumpy.nominal_values(x2), unumpy.nominal_values(B_z_p), yerr=unumpy.std_devs(B_z_p), fmt='.', color="#0033cc", ecolor='black', capsize=3, label="Izmerjeno")
 
 plt.xlabel('$r$ [cm]')
-plt.ylabel('$B/p$ [enote]')
+plt.ylabel('$B/p$ [N/m]')
 
 plt.ylim(0,1.5*10**(-5))
 # xlim_spodnja = np.min(x2)
@@ -226,9 +227,9 @@ plt.ylim(0,1.5*10**(-5))
 
 
 plt.legend()
-plt.title("Gostota toplotnega toka pomnožena z razdaljo med luknjama\nv odvisnosti od spremembe temperature med tema luknjama")
+plt.title("B/p pri različnih razdaljah do magneta")
 
-# plt.savefig("TopPre_Prevodnost.png", dpi=300, bbox_inches="tight")
+# plt.savefig("ZeMaPo.png", dpi=300, bbox_inches="tight")
 plt.show()
 
 

@@ -82,18 +82,18 @@ tan_kota = unumpy.tan(y2)
 
 
 ##### Fitanje
-slope2, intercept2, r_value2, p_value2, std_err2 = stats.linregress(unumpy.nominal_values(ena_z_r_kub)[:-4], np.tan(unumpy.nominal_values(y2))[:-4])
+slope2, intercept2, r_value2, p_value2, std_err2 = stats.linregress(unumpy.nominal_values(ena_z_r_kub), np.tan(unumpy.nominal_values(y2)))
 
-optimizedParameters2, pcov2 = opt.curve_fit(fit_fun2, unumpy.nominal_values(ena_z_r_kub)[:-4], np.tan(unumpy.nominal_values(y2))[:-4], sigma=unumpy.std_devs(tan_kota)[:-4], absolute_sigma=True)
+optimizedParameters2, pcov2 = opt.curve_fit(fit_fun2, unumpy.nominal_values(ena_z_r_kub), np.tan(unumpy.nominal_values(y2)), sigma=unumpy.std_devs(tan_kota), absolute_sigma=True)
 
 ##### Graf
-plt.plot(np.concatenate((np.array([0]), unumpy.nominal_values(ena_z_r_kub)[:-4]), axis=None), fit_fun2(np.concatenate((np.array([0]), unumpy.nominal_values(ena_z_r_kub)[:-4]), axis=None), *optimizedParameters2),
+plt.plot(np.concatenate((np.array([0]), unumpy.nominal_values(ena_z_r_kub)), axis=None), fit_fun2(np.concatenate((np.array([0]), unumpy.nominal_values(ena_z_r_kub)), axis=None), *optimizedParameters2),
          color="black", linestyle="dashed", label="Fit")
 
 # plt.plot(np.nox2, B_z_p, "o", label="Izmerjeno", color="#0033cc")
 # plt.plot(unumpy.nominal_values(x2), np.ones(np.shape(unumpy.nominal_values(x2))) * average)
 
-plt.errorbar(unumpy.nominal_values(ena_z_r_kub)[:-4], np.tan(unumpy.nominal_values(y2))[:-4], yerr=unumpy.std_devs(tan_kota)[:-4], fmt='.', color="#0033cc", ecolor='black', capsize=3, label="Izmerjeno")
+plt.errorbar(unumpy.nominal_values(ena_z_r_kub), np.tan(unumpy.nominal_values(y2)), yerr=unumpy.std_devs(tan_kota), fmt='.', color="#0033cc", ecolor='black', capsize=3, label="Izmerjeno")
 
 plt.xlabel('$1/r^3 [1/m^3]$')
 plt.ylabel('$tan(a) []$')
