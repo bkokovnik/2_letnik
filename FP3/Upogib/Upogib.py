@@ -17,9 +17,7 @@ plt.rcParams.update({
     "font.size": 18
 })
 
-###########################################################
-
-##### Drugi set podatkov #####################################################################################################################################################
+###########################################################################################################
 
 ##### Seznami podatkov
 m_k = unc.ufloat(14, 1)
@@ -123,12 +121,26 @@ Reason(s) for Halting:
 x_fit_mik = np.linspace(x_mik[0], x_mik[-1], 1000)
 y_fit_mik = fit_fun2(out_mik.beta, x_mik)
 
-plt.errorbar(x_mik, y_mik, xerr=x_err_mik, yerr=y_err_mik, linestyle='None', marker='x')
+plt.errorbar(x_mik, y_mik, xerr=x_err_mik, yerr=y_err_mik, linestyle='None', marker='.')
 plt.plot(x_mik, y_fit_mik)
 
 plt.show()
 
 print(out_mik.beta)
+print(out_mik.sd_beta)
+
+
+############ Upoštevanje sile mikrometra
+
+Ux2_ok_err = Ux2 + unumpy.uarray(np.array([fit_fun2(out_mik.beta, i) for i in Uy2_1]),
+                                 np.array([fit_fun2(out_mik.beta, i) for i in Uy2_1]) *
+                                 np.sqrt((out_mik.sd_beta[0] / out_mik.beta[0])**2 + (out_mik.sd_beta[1] / out_mik.beta[1])**2))
+
+
+Ux2_kv_err = Ux2 + unumpy.uarray(np.array([fit_fun2(out_mik.beta, i) for i in Uy2_2]),
+                                 np.array([fit_fun2(out_mik.beta, i) for i in Uy2_2]) *
+                                 np.sqrt((out_mik.sd_beta[0] / out_mik.beta[0])**2 + (out_mik.sd_beta[1] / out_mik.beta[1])**2))
+
 
 
 
@@ -138,10 +150,10 @@ print(out_mik.beta)
 ############# Okrogla palica
 
 # Initiate some data, giving some randomness using random.random().
-x_ok = unumpy.nominal_values(Ux2)
+x_ok = unumpy.nominal_values(Ux2_ok_err)
 y_ok = unumpy.nominal_values(Uy2_1_err)
 
-x_err_ok = unumpy.std_devs(Ux2)
+x_err_ok = unumpy.std_devs(Ux2_ok_err)
 y_err_ok = unumpy.std_devs(Uy2_1_err)
 
 # Create a model for fitting.
@@ -170,7 +182,7 @@ Reason(s) for Halting:
 x_fit_ok = np.linspace(x_ok[0], x_ok[-1], 1000)
 y_fit_ok = fit_fun2(out_ok.beta, x_ok)
 
-plt.errorbar(x_ok, y_ok, xerr=x_err_ok, yerr=y_err_ok, linestyle='None', marker='x')
+plt.errorbar(x_ok, y_ok, xerr=x_err_ok, yerr=y_err_ok, linestyle='None', marker='.')
 plt.plot(x_ok, y_fit_ok)
 
 plt.show()
@@ -182,10 +194,10 @@ print(out_ok.beta)
 ############ Kvadratna palica
 
 # Initiate some data, giving some randomness using random.random().
-x_kv = unumpy.nominal_values(Ux2)
+x_kv = unumpy.nominal_values(Ux2_kv_err)
 y_kv = unumpy.nominal_values(Uy2_2_err)
 
-x_err_kv = unumpy.std_devs(Ux2)
+x_err_kv = unumpy.std_devs(Ux2_kv_err)
 y_err_kv = unumpy.std_devs(Uy2_2_err)
 
 # Create a model for fitting.
@@ -214,7 +226,7 @@ Reason(s) for Halting:
 x_fit_kv = np.linspace(x_kv[0], x_kv[-1], 1000)
 y_fit_kv = fit_fun2(out_kv.beta, x_kv)
 
-plt.errorbar(x_kv, y_kv, xerr=x_err_kv, yerr=y_err_kv, linestyle='None', marker='x')
+plt.errorbar(x_kv, y_kv, xerr=x_err_kv, yerr=y_err_kv, linestyle='None', marker='.')
 plt.plot(x_kv, y_fit_kv)
 
 plt.show()
