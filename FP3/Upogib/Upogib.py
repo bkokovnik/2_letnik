@@ -10,6 +10,7 @@ import uncertainties as unc
 import uncertainties.unumpy as unumpy
 import uncertainties.umath as umath
 import math
+from scipy.odr import *
 
 plt.rcParams.update({
     "text.usetex": True,
@@ -53,11 +54,29 @@ d = np.array([9.365, 8.295, 7.260, 4.970, 3.275, 2.750])
 F = np.array([104, 87, 91, 74, 67, 71])
 
 d_err = unumpy.uarray(d, np.array([0.005 for i in d]))
-F_err = unumpy.uarray(F, np.array([0.005 for i in F]))
+F_err = unumpy.uarray(F, np.array([1 for i in F]))
 
 
 ##### Konstante, parametri in začetne vrednosti
 # print(mase)
+### Okrogla palica
+r_ok = unc.ufloat(0.71, 0.01) * 10**(-2) / 2
+l_ok = unc.ufloat(56.0, 0.1) * 10**(-2)
+m_ok = unc.ufloat(208, 1) * 10**(-3)
+
+J_ok = np.pi * r_ok**4 / 4
+
+
+### Kvadratna palica
+a_kv = unc.ufloat(0.70, 0.01) * 10**(-2)
+b_kv = unc.ufloat(0.69, 0.01) * 10**(-2)
+l_kv = unc.ufloat(56.0, 0.1) * 10**(-2)
+m_kv = unc.ufloat(261, 1) * 10**(-3)
+
+l = unc.ufloat(64.0, 0.1) * 10**(-2)
+
+J_kv = a_kv * b_kv**3 / 12
+
 
 
 ##### Definicije funkcij
@@ -79,11 +98,12 @@ def fit_fun2(B, x):
 # plt.plot(unumpy.nominal_values(Ux2), Uy2_1)
 # plt.plot(unumpy.nominal_values(Ux2), Uy2_2)
 # plt.show()
-
-
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.odr import *
+d_err = d_err * 10**(-3)
+F_err = F_err * 10**(-3) * 9.81
+Uy2_1 = Uy2_1 * 10**(-3)
+Uy2_1_err = Uy2_1_err * 10**(-3)
+Uy2_2 = Uy2_2 * 10**(-3)
+Uy2_2_err = Uy2_2_err * 10**(-3)
 
 
 ############# Mikrometrska ura
@@ -108,7 +128,7 @@ odr_mik = ODR(data_mik, lin_model_mik, beta0=[0., 1.])
 out_mik = odr_mik.run()
 
 # Use the in-built pprint method to give us results.
-out_mik.pprint()
+# out_mik.pprint()
 '''Beta: [ 1.01781493  0.48498006]
 Beta Std Error: [ 0.00390799  0.03660941]
 Beta Covariance: [[ 0.00241322 -0.01420883]
@@ -121,13 +141,19 @@ Reason(s) for Halting:
 x_fit_mik = np.linspace(x_mik[0], x_mik[-1], 1000)
 y_fit_mik = fit_fun2(out_mik.beta, x_mik)
 
-plt.errorbar(x_mik, y_mik, xerr=x_err_mik, yerr=y_err_mik, linestyle='None', marker='.')
-plt.plot(x_mik, y_fit_mik)
+plt.errorbar(x_mik, y_mik, xerr=x_err_mik, yerr=y_err_mik, linestyle='None', marker='.', capsize=3, label="Izmerjeno")
+plt.plot(x_mik, y_fit_mik, label="Fit", color="black")
+plt.title("Sila mikrometra v odvisnosti od njegovega položaja")
+plt.legend()
+plt.savefig("Upogib/Upogib_Mikrometer.png", dpi=300, bbox_inches="tight")
 
 plt.show()
 
-print(out_mik.beta)
-print(out_mik.sd_beta)
+# print(out_mik.beta)
+# print(out_mik.sd_beta)
+
+
+
 
 
 ############ Upoštevanje sile mikrometra
@@ -141,6 +167,9 @@ Ux2_kv_err = Ux2 + unumpy.uarray(np.array([fit_fun2(out_mik.beta, i) for i in Uy
                                  np.array([fit_fun2(out_mik.beta, i) for i in Uy2_2]) *
                                  np.sqrt((out_mik.sd_beta[0] / out_mik.beta[0])**2 + (out_mik.sd_beta[1] / out_mik.beta[1])**2))
 
+
+Ux2_kv_err = Ux2_kv_err * 10**(-3) * 9.81
+Ux2_ok_err = Ux2_ok_err * 10**(-3) * 9.81
 
 
 
@@ -169,7 +198,7 @@ odr_ok = ODR(data_ok, quad_model_ok, beta0=[0., 1.])
 out_ok = odr_ok.run()
 
 # Use the in-built pprint method to give us results.
-out_ok.pprint()
+# out_ok.pprint()
 '''Beta: [ 1.01781493  0.48498006]
 Beta Std Error: [ 0.00390799  0.03660941]
 Beta Covariance: [[ 0.00241322 -0.01420883]
@@ -182,12 +211,15 @@ Reason(s) for Halting:
 x_fit_ok = np.linspace(x_ok[0], x_ok[-1], 1000)
 y_fit_ok = fit_fun2(out_ok.beta, x_ok)
 
-plt.errorbar(x_ok, y_ok, xerr=x_err_ok, yerr=y_err_ok, linestyle='None', marker='.')
-plt.plot(x_ok, y_fit_ok)
+plt.errorbar(x_ok, y_ok, xerr=x_err_ok, yerr=y_err_ok, linestyle='None', marker='.', capsize=3, label="Izmerjeno")
+plt.plot(x_ok, y_fit_ok, label="Fit", color="black")
+plt.title("Upogib sredine palice okroglega preseka\nv odvisnosti od obremenitve")
+plt.legend()
+plt.savefig("Upogib/Upogib_Okrogla.png", dpi=300, bbox_inches="tight")
 
 plt.show()
 
-print(out_ok.beta)
+# print(out_ok.beta)
 
 
 
@@ -213,7 +245,7 @@ odr_kv = ODR(data_kv, quad_model_kv, beta0=[0., 1.])
 out_kv = odr_kv.run()
 
 # Use the in-built pprint method to give us results.
-out_kv.pprint()
+# out_kv.pprint()
 '''Beta: [ 1.01781493  0.48498006]
 Beta Std Error: [ 0.00390799  0.03660941]
 Beta Covariance: [[ 0.00241322 -0.01420883]
@@ -226,12 +258,74 @@ Reason(s) for Halting:
 x_fit_kv = np.linspace(x_kv[0], x_kv[-1], 1000)
 y_fit_kv = fit_fun2(out_kv.beta, x_kv)
 
-plt.errorbar(x_kv, y_kv, xerr=x_err_kv, yerr=y_err_kv, linestyle='None', marker='.')
-plt.plot(x_kv, y_fit_kv)
+plt.errorbar(x_kv, y_kv, xerr=x_err_kv, yerr=y_err_kv, linestyle='None', marker='.', capsize=3, label="Izmerjeno")
+plt.plot(x_kv, y_fit_kv, label="Fit", color="black")
+
+plt.title("Upogib sredine palice kvardatnega preseka\nv odvisnosti od obremenitve")
+plt.legend()
+plt.savefig("Upogib/Upogib_Kvadratna.png", dpi=300, bbox_inches="tight")
 
 plt.show()
 
-print(out_kv.beta)
+# print(out_kv.beta)
+
+
+##### Prožnostna modula
+###Okrogla palica
+E_ok = - (out_ok.beta[0])**(-1) * l_ok**3 / (48 * J_ok)
+E_kv = - (out_kv.beta[0])**(-1) * l_kv**3 / (48 * J_kv)
+
+print(E_ok, E_kv)
+
+
+
+### Izpis podatkov
+print("Koeficiant vzmeti v mikrometru:  ", unc.ufloat(out_mik.beta[0], out_mik.sd_beta[0]), "N/m")
+print("Vztrajnostna momenta obeh profilov:  ", "J_ok =", J_ok * 10**10, "10^(-10) m^4", ", J_kv =", J_kv * 10**10, "10^(-10) m^4")
+print("Prožnostna modula obeh profilov:  ", "E_ok =", E_ok * 10**(-9), "GPa", ", E_kv =", E_kv * 10**(-9), "GPa")
+print("F_max obeh profilov:  ", "F_max_ok =", ((0.1/100) * 8 * E_ok * J_ok / (2 * r_ok * l_ok)), "N", ", F_max_ok =", ((0.1/100) * 8 * E_kv * J_kv / (b_kv * l_kv)), "N")
+print("Gostoti obeh profilov:  ", "\\rho_ok =", (m_ok/(l * np.pi * r_ok**2)), "kg/m^3", ", \\rho_kv =", (m_kv/(l * a_kv * b_kv)), "kg/m^3")
+print("Upogib zaradi lastne teže obeh profilov:  ", "u_l_ok =", - m_ok * 9.81 * l**3 / (48 * E_ok * J_ok) * 10**3, "mm", ", u_l_kv =", - m_kv * 9.81 * l**3 / (48 * E_kv * J_kv) * 10**3, "mm")
+
+
+### Grafa navora in strićne sile
+def navor(x):
+    return (-1/3 + x/2) * np.abs(x)/x
+def sila(x):
+    return np.abs(x)/x
+seznam = np.linspace(-1, 1, 11)
+
+
+fig, ax = plt.subplots()
+ax.plot([-1, 0], [0, 1], color="black")
+ax.plot([0, 1], [1, 0], color="black")
+
+ax.set_yticks([0, 1])
+ax.set_yticklabels(['0', '$F_0 l / 2$'])
+
+ax.set_xticks([-1, 0, 1])
+ax.set_xticklabels(["$- l / 2$", '0', '$l / 2$'])
+plt.title("Graf navora v odvisnosti od pozicije x\nza poljubno obremenitev")
+plt.savefig("Upogib/Upogib_Navor.png", dpi=300, bbox_inches="tight")
+
+plt.show()
+
+
+fig, ax = plt.subplots()
+ax.plot([-1, 0], [1, 1], color="black")
+ax.plot([0, 0], [-1, 1], color="black", linestyle="dashed")
+ax.plot([0, 1], [-1, -1], color="black")
+
+ax.set_yticks([-1, 0, 1])
+ax.set_yticklabels(['$- F_0 / 2$', '0', '$F_0 / 2$'])
+
+ax.set_xticks([-1, 0, 1])
+ax.set_xticklabels(["$- l / 2$", '0', '$l / 2$'])
+plt.title("Graf strižne sile v odvisnosti od pozicije x\nza poljubno obremenitev")
+plt.savefig("Upogib/Upogib_Sila.png", dpi=300, bbox_inches="tight")
+
+plt.show()
+
 
 
 
@@ -324,8 +418,8 @@ print(out_kv.beta)
 # plt.grid(which='major', alpha=0.5)
 
 
-plt.legend()
-plt.title("Gostota toplotnega toka pomnožena z razdaljo med luknjama\nv odvisnosti od spremembe temperature med tema luknjama")
+# plt.legend()
+# plt.title("Gostota toplotnega toka pomnožena z razdaljo med luknjama\nv odvisnosti od spremembe temperature med tema luknjama")
 
 # plt.savefig("TopPre_Prevodnost.png", dpi=300, bbox_inches="tight")
 # plt.show()
