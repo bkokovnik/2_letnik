@@ -144,10 +144,10 @@ plt.xlabel('$F$ (N)')
 plt.ylabel('$U_0$ (V)')
 plt.legend()
 plt.title("$U_0$ v odvisnosti od obremenitve")
-plt.savefig("Piezo/Piezo_naklon.pgf")
+# plt.savefig("Piezo/Piezo_naklon.pgf")
 plt.show()
 
-k = unc.ufloat(out_mik.beta[0], out_mik.sd_beta[0]) * 10**(3)
+k = unc.ufloat(out_mik.beta[0], out_mik.sd_beta[0])
 d_fit = - k * C_fit
 d_tangenta = - k * C_tangenta
 
