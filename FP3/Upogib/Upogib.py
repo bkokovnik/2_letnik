@@ -145,7 +145,7 @@ plt.errorbar(x_mik, y_mik, xerr=x_err_mik, yerr=y_err_mik, linestyle='None', mar
 plt.plot(x_mik, y_fit_mik, label="Fit", color="black")
 plt.title("Sila mikrometra v odvisnosti od njegovega položaja")
 plt.legend()
-plt.savefig("Upogib/Upogib_Mikrometer.png", dpi=300, bbox_inches="tight")
+# plt.savefig("Upogib/Upogib_Mikrometer.png", dpi=300, bbox_inches="tight")
 
 plt.show()
 
@@ -215,13 +215,13 @@ plt.errorbar(x_ok, y_ok, xerr=x_err_ok, yerr=y_err_ok, linestyle='None', marker=
 plt.plot(x_ok, y_fit_ok, label="Fit", color="black")
 plt.title("Upogib sredine palice okroglega preseka\nv odvisnosti od obremenitve")
 plt.legend()
-plt.savefig("Upogib/Upogib_Okrogla.png", dpi=300, bbox_inches="tight")
+# plt.savefig("Upogib/Upogib_Okrogla.png", dpi=300, bbox_inches="tight")
 
 plt.show()
 
 # print(out_ok.beta)
 
-
+print(out_ok.beta)
 
 ############ Kvadratna palica
 
@@ -263,7 +263,7 @@ plt.plot(x_kv, y_fit_kv, label="Fit", color="black")
 
 plt.title("Upogib sredine palice kvardatnega preseka\nv odvisnosti od obremenitve")
 plt.legend()
-plt.savefig("Upogib/Upogib_Kvadratna.png", dpi=300, bbox_inches="tight")
+# plt.savefig("Upogib/Upogib_Kvadratna.png", dpi=300, bbox_inches="tight")
 
 plt.show()
 
@@ -306,7 +306,7 @@ ax.set_yticklabels(['0', '$F_0 l / 2$'])
 ax.set_xticks([-1, 0, 1])
 ax.set_xticklabels(["$- l / 2$", '0', '$l / 2$'])
 plt.title("Graf navora v odvisnosti od pozicije x\nza poljubno obremenitev")
-plt.savefig("Upogib/Upogib_Navor.png", dpi=300, bbox_inches="tight")
+# plt.savefig("Upogib/Upogib_Navor.png", dpi=300, bbox_inches="tight")
 
 plt.show()
 
@@ -322,7 +322,7 @@ ax.set_yticklabels(['$- F_0 / 2$', '0', '$F_0 / 2$'])
 ax.set_xticks([-1, 0, 1])
 ax.set_xticklabels(["$- l / 2$", '0', '$l / 2$'])
 plt.title("Graf strižne sile v odvisnosti od pozicije x\nza poljubno obremenitev")
-plt.savefig("Upogib/Upogib_Sila.png", dpi=300, bbox_inches="tight")
+# plt.savefig("Upogib/Upogib_Sila.png", dpi=300, bbox_inches="tight")
 
 plt.show()
 
