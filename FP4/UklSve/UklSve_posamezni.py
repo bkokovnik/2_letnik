@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import scipy.constants as const
 import uncertainties as unc
 import uncertainties.unumpy as unumpy
+import uncertainties.unumpy as unp
 import uncertainties.umath as umath
 import math
 import pandas as pd
@@ -59,7 +60,6 @@ x_5 = Reza_5[:, 0]
 y_5 = Reza_5[:, 1]
 
 x_5 = (np.arctan(x_5 / 2000))
-y_5 = y_5 / np.max(y_5)
 
 # # Zamik grafa
 height_threshold = 0.2  # Adjust this threshold as needed
@@ -88,9 +88,11 @@ x_smooth_5 = np.linspace(np.min(x_5), np.max(x_5), 4000)
 optimized_params_5, covariance_5 = curve_fit(fit_krivulja, x_trim_5, y_trim_5, p0=[0.031, 16.5e-6, 90e-6])#, bounds=([-5, -5, -5], [3.3e-2, 5, 5]), ftol=1e-12, xtol=1e-12)
 # print(optimized_params_5)
 
-plt.plot(x_smooth_5, fit_krivulja(x_smooth_5, *optimized_params_5), label='Fit', zorder=4)
+# y_5 = y_5 / np.max(fit_krivulja(x_smooth_5, *optimized_params_5))
+
+plt.plot(x_smooth_5, fit_krivulja(x_smooth_5, *optimized_params_5) / np.max(fit_krivulja(x_smooth_5, *optimized_params_5)), label='Fit', zorder=4)
 # plt.plot(x_smooth_5, fit_krivulja(x_smooth_5, *[0.031, 2.03446e-5, 9.01957e-5]), label='5 rež (fit)', zorder=3)
-plt.plot(x_5, y_5, ".", markersize=5, label="Izmerjeno", zorder=2)
+plt.plot(x_5, y_5 / np.max(fit_krivulja(x_smooth_5, *optimized_params_5)), ".", markersize=5, label="Izmerjeno", zorder=2)
 # plt.plot(x_5, fit_krivulja(x_5, 0.037, 16.5e-6, 90e-6, 0))
 
 plt.xlabel(r'$\phi$ [rad]')
@@ -132,7 +134,6 @@ x_3 = Reza_3[:, 0]
 y_3 = Reza_3[:, 1]
 
 x_3 = (np.arctan(x_3 / 2000))
-y_3 = y_3 / np.max(y_3)
 
 # # Zamik grafa
 height_threshold = 0.2  # Adjust this threshold as needed
@@ -161,8 +162,10 @@ x_smooth_3 = np.linspace(np.min(x_3), np.max(x_3), 4000)
 optimized_params_3, covariance_3 = curve_fit(fit_krivulja, x_trim_3, y_trim_3, p0=[0.037, 16.5e-6, 90e-6])#, bounds=([0.000000000001, 0.000000000001, 0.000000000001], [np.inf, np.inf, np.inf]), ftol=1e-12, xtol=1e-12)
 # print(optimized_params_3)
 
-plt.plot(x_smooth_3, fit_krivulja(x_smooth_3, *optimized_params_3), label='Fit', zorder=4)
-plt.plot(x_3, y_3, ".", markersize=5, label="Izmerjeno", zorder=1)
+# y_3 = y_3 / np.max(fit_krivulja(x_smooth_3, *optimized_params_3))
+
+plt.plot(x_smooth_3, fit_krivulja(x_smooth_3, *optimized_params_3) / np.max(fit_krivulja(x_smooth_3, *optimized_params_3)), label='Fit', zorder=4)
+plt.plot(x_3, y_3 / np.max(fit_krivulja(x_smooth_3, *optimized_params_3)), ".", markersize=5, label="Izmerjeno", zorder=1)
 
 plt.xlabel(r'$\phi$ [rad]')
 plt.ylabel('$j/j_0$')
@@ -201,7 +204,6 @@ x_2 = Reza_2[:, 0]
 y_2 = Reza_2[:, 1]
 
 x_2 = (np.arctan(x_2 / 2000))
-y_2 = y_2 / np.max(y_2)
 
 # # Zamik grafa
 height_threshold = 0.2  # Adjust this threshold as needed
@@ -230,8 +232,10 @@ x_smooth_2 = np.linspace(np.min(x_2), np.max(x_2), 4000)
 optimized_params_2, covariance_2 = curve_fit(fit_krivulja, x_trim_2, y_trim_2, p0=[0.037, 16.5e-6, 90e-6])#, bounds=([0.000000000001, 0.000000000001, 0.000000000001], [np.inf, np.inf, np.inf]), ftol=1e-12, xtol=1e-12)
 # print(optimized_params_2)
 
-plt.plot(x_smooth_2, fit_krivulja(x_smooth_2, *optimized_params_2), label='Fit', zorder=4)
-plt.plot(x_2, y_2, ".", markersize=5
+# y_2 = y_2 / np.max(fit_krivulja(x_smooth_2, *optimized_params_2))
+
+plt.plot(x_smooth_2, fit_krivulja(x_smooth_2, *optimized_params_2) / np.max(fit_krivulja(x_smooth_2, *optimized_params_2)), label='Fit', zorder=4)
+plt.plot(x_2, y_2 / np.max(fit_krivulja(x_smooth_2, *optimized_params_2)), ".", markersize=5
          , label="Izmerjeno", zorder=1)
 # plt.plot(x_5, fit_krivulja(x_5, 0.037, 16.5e-6, 90e-6, 0))
 
@@ -272,7 +276,6 @@ x_1 = Reza_1[:, 0]
 y_1 = Reza_1[:, 1]
 
 x_1 = (np.arctan(x_1 / 2000))
-y_1 = y_1 / np.max(y_1)
 
 # # Zamik grafa
 height_threshold = 0.2  # Adjust this threshold as needed
@@ -301,8 +304,10 @@ x_smooth_1 = np.linspace(np.min(x_1), np.max(x_1), 4000)
 optimized_params_1, covariance_1 = curve_fit(fit_krivulja_1, x_trim_1, y_trim_1, p0=[0.037, 16.5e-6])#, bounds=([0.000000000001, 0.000000000001, 0.000000000001], [np.inf, np.inf, np.inf]), ftol=1e-12, xtol=1e-12)
 # print(optimized_params_1)
 
-plt.plot(x_smooth_1, fit_krivulja_1(x_smooth_1, *optimized_params_1), label='Fit', zorder=3)
-plt.plot(x_1, y_1, ".", markersize=5, label="Izmerjeno", zorder=1)
+# y_1 = y_1 / np.max(fit_krivulja_1(x_smooth_1, *optimized_params_1))
+
+plt.plot(x_smooth_1, fit_krivulja_1(x_smooth_1, *optimized_params_1) / np.max(fit_krivulja_1(x_smooth_1, *optimized_params_1)), label='Fit', zorder=4)
+plt.plot(x_1, y_1 / np.max(fit_krivulja_1(x_smooth_1, *optimized_params_1)), ".", markersize=5, label="Izmerjeno", zorder=1)
 
 plt.xlabel(r'$\phi$ [rad]')
 plt.ylabel('$j/j_0$')
@@ -329,6 +334,41 @@ print("#########   1 reža   ##########\n",
 
 
 
-# print(covariance_1, covariance_2, covariance_3, covariance_5)
-plt.plot([1, 2, 3, 5], [j0_1.n * 1, j0_2.n * 2**2, j0_3.n * 3**2, j0_5.n * 5**2])
-plt.show()
+# # print(covariance_1, covariance_2, covariance_3, covariance_5)
+# # plt.plot([1, 2, 3, 5], [j0_1.n, j0_2.n, j0_3.n, j0_5.n])
+# # plt.plot([1, 2, 3, 5], [np.max(y_2)/4, np.max(y_2), np.max(y_3), np.max(y_5)])
+# plt.plot([1, 2, 3, 5], [np.max(y_1), np.max(y_2)/4, np.max(y_3)/9, np.max(y_5)/25])
+# # plt.plot([1, 2, 3, 5], [np.max(fit_krivulja_1(x_smooth_1, *optimized_params_1)), np.max(fit_krivulja(x_smooth_2, *optimized_params_2)), np.max(fit_krivulja(x_smooth_3, *optimized_params_3)), np.max(fit_krivulja(x_smooth_5, *optimized_params_5))])
+# plt.show()
+
+j_0 = np.array([np.max(y_1), np.max(y_2)/4, np.max(y_3)/9, np.max(y_5)/25])
+j_0_avg = unc.ufloat(np.average(j_0), np.std(j_0))
+print("Povprečni j_0:", j_0_avg)
+print("j_0 za vsako posebaj:", j_0)
+# plt.plot(x_5, y_5)
+# plt.plot(x_3, y_3)
+# plt.plot(x_2, y_2)
+# plt.plot(x_1, y_1)
+# plt.show()
+
+
+
+
+# # Define your data arrays and uncertainties
+# x = np.array([1, 2, 3, 5])  # Example x data
+# y = np.array([np.max(y_1), np.max(y_2)/4, np.max(y_3)/9, np.max(y_5)/25])  # Example y data
+
+# # Plot scatter
+# plt.plot(x, y, ".")
+
+# # Plot average line
+# plt.plot(x, np.ones(np.shape(x)) * j_0_avg.n, color='black', linestyle='-', label='Average Line')
+
+# # Shade area around average line
+# plt.fill_between(x, np.ones(np.shape(x)) * (j_0_avg.n - j_0_avg.s), np.ones(np.shape(x)) * (j_0_avg.n + j_0_avg.s), color='gray', alpha=0.3)
+
+# plt.xlabel('X')
+# plt.ylabel('Y')
+# plt.legend()
+# # plt.grid(True)
+# plt.show()

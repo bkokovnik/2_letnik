@@ -138,8 +138,8 @@ plt.plot(x_smooth_3, fit_krivulja(x_smooth_3, *optimized_params_3), label='3 re�
 # plt.plot(x_3, y_3, ".", markersize=3, label="3 re탑e (izmerjeno)", zorder=1)
 
 plt.xlabel(r'$\phi$ [rad]')
-plt.ylabel('$j/j_0$')
-plt.title("Primerjava zaslona s petimi in tremi re탑ami")
+plt.ylabel('$j$')
+plt.title("Primerjava zaslonov s petimi in tremi re탑ami")
 x_limits = plt.xlim()
 y_limits = plt.ylim()
 plt.ylim(y_limits)
@@ -153,6 +153,45 @@ plt.show()
 
 
 #####################################################################################################
+
+Reza_3 = pd.read_csv("FP4/UklSve/UklSve/Reza_3.dat", sep='\t', header=None).to_numpy()
+
+x_3 = Reza_3[:, 0]
+y_3 = Reza_3[:, 1]
+
+x_3 = (np.arctan(x_3 / 2000))
+# y_3 = y_3 / np.max(y_3)
+
+# # Zamik grafa
+height_threshold = 0.2  # Adjust this threshold as needed
+peaks_3, _ = find_peaks(y_3, height=height_threshold)
+
+# plt.plot(x_5[peaks_5], y_5[peaks_5] + 0.03, 'rv', label='Vrhovi')
+
+x_3 = x_3 - x_3[np.where(np.max(y_3) == y_3)] - 0.00022
+
+x_trim_3 = x_3[20:-20]
+y_trim_3 = y_3[20:-20]
+
+
+# maska_1 = x_5 < 0.025
+# maska_2 = x_5 > -0.025
+# maska = maska_1 * maska_2
+
+# x_5 = x_5[maska]
+# y_5 = y_5[maska]
+
+n = 3
+o = 0
+
+x_smooth_3 = np.linspace(np.min(x_3), np.max(x_3), 4000)
+
+optimized_params_3, covariance_3 = curve_fit(fit_krivulja, x_trim_3, y_trim_3, p0=[0.037, 16.5e-6, 90e-6])#, bounds=([0.000000000001, 0.000000000001, 0.000000000001], [np.inf, np.inf, np.inf]), ftol=1e-12, xtol=1e-12)
+print(optimized_params_3)
+
+plt.plot(x_smooth_3, fit_krivulja(x_smooth_3, *optimized_params_3), label='3 re탑e (fit)', zorder=2)
+# plt.plot(x_3, y_3, ".", markersize=3, label="3 re탑e (izmerjeno)", zorder=1)
+#####################################
 
 
 Reza_2 = pd.read_csv("FP4/UklSve/UklSve/Reza_2.dat", sep='\t', header=None).to_numpy()
@@ -195,51 +234,10 @@ plt.plot(x_smooth_2, fit_krivulja(x_smooth_2, *optimized_params_2), label='2 re�
 # plt.plot(x_5, fit_krivulja(x_5, 0.037, 16.5e-6, 90e-6, 0))
 
 
-#####################################
-
-
-
-Reza_3 = pd.read_csv("FP4/UklSve/UklSve/Reza_3.dat", sep='\t', header=None).to_numpy()
-
-x_3 = Reza_3[:, 0]
-y_3 = Reza_3[:, 1]
-
-x_3 = (np.arctan(x_3 / 2000))
-# y_3 = y_3 / np.max(y_3)
-
-# # Zamik grafa
-height_threshold = 0.2  # Adjust this threshold as needed
-peaks_3, _ = find_peaks(y_3, height=height_threshold)
-
-# plt.plot(x_5[peaks_5], y_5[peaks_5] + 0.03, 'rv', label='Vrhovi')
-
-x_3 = x_3 - x_3[np.where(np.max(y_3) == y_3)] - 0.00022
-
-x_trim_3 = x_3[20:-20]
-y_trim_3 = y_3[20:-20]
-
-
-# maska_1 = x_5 < 0.025
-# maska_2 = x_5 > -0.025
-# maska = maska_1 * maska_2
-
-# x_5 = x_5[maska]
-# y_5 = y_5[maska]
-
-n = 3
-o = 0
-
-x_smooth_3 = np.linspace(np.min(x_3), np.max(x_3), 4000)
-
-optimized_params_3, covariance_3 = curve_fit(fit_krivulja, x_trim_3, y_trim_3, p0=[0.037, 16.5e-6, 90e-6])#, bounds=([0.000000000001, 0.000000000001, 0.000000000001], [np.inf, np.inf, np.inf]), ftol=1e-12, xtol=1e-12)
-print(optimized_params_3)
-
-plt.plot(x_smooth_3, fit_krivulja(x_smooth_3, *optimized_params_3), label='3 re탑e (fit)', zorder=3)
-# plt.plot(x_3, y_3, ".", markersize=3, label="3 re탑e (izmerjeno)", zorder=1)
 
 plt.xlabel(r'$\phi$ [rad]')
-plt.ylabel('$j/j_0$')
-plt.title("Primerjava zaslona s tremi in dvema re탑ama")
+plt.ylabel('$j$')
+plt.title("Primerjava zaslonov s tremi in dvema re탑ama")
 x_limits = plt.xlim()
 y_limits = plt.ylim()
 plt.ylim(y_limits)
@@ -339,7 +337,7 @@ plt.plot(x_smooth_1, fit_krivulja_1(x_smooth_1, *optimized_params_1), label='1 r
 
 plt.xlabel(r'$\phi$ [rad]')
 plt.ylabel('$j$')
-plt.title("Primerjava zaslona z dvema in eno re탑o")
+plt.title("Primerjava zaslonov z dvema in eno re탑o")
 x_limits = plt.xlim()
 y_limits = plt.ylim()
 plt.ylim(y_limits)
