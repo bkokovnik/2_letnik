@@ -29,3 +29,25 @@ v = [16.648, 19.742, 32.591, 18.484, 18.883, 34.462, 14.854, 31.152, 20.799, 29.
 V = np.array([52, 66, 126, 48, 44, 68, 29, 74, 52, 111, 35, 54, 206, 56, 36, 54, 38, 50, 55, 99, 448, 42, 22, 146, 147, 61, 109, 19, 37, 48])
 
 V_err = unp.uarray(V, np.ones(np.shape(V)) * 5)
+
+rho = 0.973 * (10**(-3))/(10**(-2))**3
+
+d = unc.ufloat(5, 5*0.02) * 10**(-3)
+
+ni = 18.3 * 10**(-6)
+rho_z = 1.1929
+
+
+sez = []
+
+for i in range(len(v)):
+    ne = (4 * np.pi)/3 * ((9 * ni * v[i] * 10**(-6)) / (2 * (rho - rho_z) * 9.81))**(3/2) * (rho - rho_z) * 9.81 * V[i]/d
+    sez.append(ne)
+print(sez)
+
+n_e0 = np.array([sez])
+
+
+plt.scatter(np.ones(np.shape(unp.nominal_values(n_e0))), unp.nominal_values(n_e0))
+
+plt.show()
