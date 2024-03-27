@@ -77,7 +77,7 @@ plt.legend()
 
 
 
-# plt.savefig('FP4/UklSve/Radij.png', dpi=300, bbox_inches="tight")
+plt.savefig('FP4/UklSve/Slike/Radij.png', dpi=300, bbox_inches="tight")
 plt.show()
 
 r = ((unc.ufloat(np.abs(optimizedParameters[0]), np.sqrt(pcov[0, 0])))**(-1/2))
