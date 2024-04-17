@@ -352,7 +352,8 @@ print("#########   1 reža   ##########\n",
 # # plt.plot([1, 2, 3, 5], [np.max(fit_krivulja_1(x_smooth_1, *optimized_params_1)), np.max(fit_krivulja(x_smooth_2, *optimized_params_2)), np.max(fit_krivulja(x_smooth_3, *optimized_params_3)), np.max(fit_krivulja(x_smooth_5, *optimized_params_5))])
 # plt.show()
 
-j_0 = np.array([np.max(y_1), np.max(y_2)/4, np.max(y_3)/9, np.max(y_5)/25])
+# j_0 = np.array([np.max(y_1), np.max(y_2)/4, np.max(y_3)/9, np.max(y_5)/25])
+j_0 = np.array([optimized_params_1[0], optimized_params_2[0]/4, optimized_params_3[0]/9, optimized_params_5[0]/25])
 j_0_avg = unc.ufloat(np.average(j_0), np.std(j_0))
 print("Povprečni j_0:", j_0_avg)
 print("j_0 za vsako posebaj:", j_0)

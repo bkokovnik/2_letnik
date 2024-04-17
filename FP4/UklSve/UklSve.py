@@ -148,7 +148,7 @@ plt.legend()
 
 
 
-# plt.savefig('FP4/UklSve/2_rezi_fit.png', dpi=300, bbox_inches="tight")
+plt.savefig('FP4/UklSve/Slike/5_3.png', dpi=300, bbox_inches="tight")
 plt.show()
 
 
@@ -246,7 +246,7 @@ plt.legend()
 
 
 
-# plt.savefig('FP4/UklSve/2_rezi_fit.png', dpi=300, bbox_inches="tight")
+plt.savefig('FP4/UklSve/Slike/2_3.png', dpi=300, bbox_inches="tight")
 plt.show()
 
 
@@ -346,5 +346,5 @@ plt.legend()
 
 
 
-# plt.savefig('FP4/UklSve/2_rezi_fit.png', dpi=300, bbox_inches="tight")
+plt.savefig('FP4/UklSve/Slike/1_2.png', dpi=300, bbox_inches="tight")
 plt.show()
