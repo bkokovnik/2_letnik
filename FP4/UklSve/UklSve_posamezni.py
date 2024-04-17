@@ -41,6 +41,17 @@ def fit_krivulja_1(x, j_0, D):
     result[x != 0] = (j_0 ) * (np.sin(k * (x[x != 0] + o) * D / 2) / (k * (x[x != 0] + o) * D / 2)) ** 2
     return result
 
+def obtezeno_povprecje(uarray):
+    vrednosti = unumpy.nominal_values(uarray)
+    negotovosti = unumpy.std_devs(uarray)
+
+    obtezitev = 1/(negotovosti**2)
+    obtezeno_povprecje = np.sum(vrednosti * obtezitev) / np.sum(obtezitev)
+
+    obtezena_negotovost = np.sqrt(np.sum(negotovosti**2 * obtezitev**2) / (np.sum(obtezitev)**2))
+
+    return unc.ufloat(obtezeno_povprecje, obtezena_negotovost)
+
 
 # def fit_krivulja_1(x, j_0, D):
 #     return (j_0 ) * (np.sin(k * x * D / 2) / (k * x * D / 2)) ** 2
@@ -106,7 +117,7 @@ plt.legend()
 
 
 
-# plt.savefig('FP4/UklSve/2_rezi_fit.png', dpi=300, bbox_inches="tight")
+plt.savefig('FP4/UklSve/Slike/5_rez_fit.png', dpi=300, bbox_inches="tight")
 plt.show()
 
 
@@ -178,7 +189,7 @@ plt.legend()
 
 
 
-# plt.savefig('FP4/UklSve/2_rezi_fit.png', dpi=300, bbox_inches="tight")
+plt.savefig('FP4/UklSve/Slike/3_reze_fit.png', dpi=300, bbox_inches="tight")
 plt.show()
 
 
@@ -250,7 +261,7 @@ plt.legend()
 
 
 
-# plt.savefig('FP4/UklSve/2_rezi_fit.png', dpi=300, bbox_inches="tight")
+plt.savefig('FP4/UklSve/Slike/2_rezi_fit.png', dpi=300, bbox_inches="tight")
 plt.show()
 
 j0_2 = unc.ufloat(optimized_params_2[0], np.sqrt(covariance_2[0, 0]))
@@ -320,7 +331,7 @@ plt.legend()
 
 
 
-# plt.savefig('FP4/UklSve/2_rezi_fit.png', dpi=300, bbox_inches="tight")
+plt.savefig('FP4/UklSve/Slike/1_reza_fit.png', dpi=300, bbox_inches="tight")
 plt.show()
 
 
