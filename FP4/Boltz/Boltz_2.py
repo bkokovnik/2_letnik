@@ -87,17 +87,14 @@ def fit_napake(x: unp.uarray, y: unp.uarray, funkcija=lin_fun2, print=0) -> np.n
     
     return out_mik
 
-def graf_errorbar(x: unp.uarray, y: unp.uarray, fit: np.ndarray, podatki_label="Izmerjeno"):
-    '''Sprejme 2 unumpy arraya, fitane parametre in nariše črtkanerrorbar prikaz podatkov'''
+def graf_errorbar(x: unp.uarray, y: unp.uarray, podatki_label="Izmerjeno"):
+    '''Sprejme 2 unumpy arraya, fitane parametre in nariše errorbar prikaz podatkov'''
     # Podatki
     x_mik = unp.nominal_values(x)
     y_mik = unp.nominal_values(y)
 
     x_err_mik = unp.std_devs(x)
     y_err_mik = unp.std_devs(y)
-
-    x_fit_mik = np.linspace(x_mik[0], x_mik[-1], 1000)
-    y_fit_mik = lin_fun2(fit.beta, x_mik)
 
     plt.errorbar(x_mik, y_mik, xerr=x_err_mik, yerr=y_err_mik, linestyle='None', marker='.', capsize=3, label=podatki_label)
 
@@ -174,9 +171,9 @@ fit2 = fit_napake(x2_unc, y2_unc)
 fit3 = fit_napake(x3_unc, y3_unc)
 
 
-graf_errorbar(x1_unc, y1_unc, fit1, "$14{,}1\ ^\circ$C")
-graf_errorbar(x2_unc, y2_unc, fit2, "$34{,}1\ ^\circ$C")
-graf_errorbar(x3_unc, y3_unc, fit3, "$53{,}2\ ^\circ$C")
+graf_errorbar(x1_unc, y1_unc, "$14{,}1\ ^\circ$C")
+graf_errorbar(x2_unc, y2_unc, "$34{,}1\ ^\circ$C")
+graf_errorbar(x3_unc, y3_unc, "$53{,}2\ ^\circ$C")
 
 x_limits = plt.xlim()
 y_limits = plt.ylim()
@@ -216,13 +213,24 @@ a4 = np.genfromtxt(r"FP4\Boltz\Podatki\U_0_5.txt", delimiter='\t', encoding="utf
 y4_unc = unp.uarray(a4.T[1], (np.ones(np.shape(a4.T[1])) * 0.001e-6))
 x4_unc = unp.uarray(a4.T[0], np.ones(np.shape(a4.T[0])) * 0.1) + 273
 
+
+a5 = np.genfromtxt(r"FP4\Boltz\Podatki\U_0_58.txt", delimiter='\t', encoding="utf-8")
+
+y5_unc = unp.uarray(a5.T[1], (np.ones(np.shape(a5.T[1])) * 0.001e-6))
+x5_unc = unp.uarray(a5.T[0], np.ones(np.shape(a5.T[0])) * 0.1) + 273
+
+
+
 sorted_indices = np.argsort(x4_unc)
 x4_unc = x4_unc[sorted_indices]
 y4_unc = y4_unc[sorted_indices]
 
+sorted_indices = np.argsort(x5_unc)
+x5_unc = x5_unc[sorted_indices]
+y5_unc = y5_unc[sorted_indices]
 
 
-opt1 = fit_napake(x4_unc, y4_unc, tok_fun, 1)
+
 
 
 # def lin_fun3(a, b, c, x):
@@ -236,11 +244,49 @@ opt1 = fit_napake(x4_unc, y4_unc, tok_fun, 1)
 # plt.plot(unp.nominal_values(x4_unc), unp.nominal_values(y4_unc))
 # plt.plot(x_fit_mik, y_fit_mik)
 
+# opt1 = fit_napake(x4_unc, y4_unc, tok_fun, 1)
 
-x_fit_mik = np.linspace(unp.nominal_values(x4_unc)[0], unp.nominal_values(x4_unc)[-1], 1000)
-y_fit_mik = tok_fun(opt1.beta, unp.nominal_values(x_fit_mik))
+# x_fit_mik = np.linspace(unp.nominal_values(x4_unc)[0], unp.nominal_values(x4_unc)[-1], 1000)
+# y_fit_mik = tok_fun(opt1.beta, unp.nominal_values(x_fit_mik))
 
-plt.plot(unp.nominal_values(x4_unc), unp.nominal_values(y4_unc))
-plt.plot(x_fit_mik, y_fit_mik)
+# plt.plot(unp.nominal_values(x4_unc), unp.nominal_values(y4_unc))
+# plt.plot(x_fit_mik, y_fit_mik)
+
+# plt.show()
+
+plt.plot(unp.nominal_values(x4_unc), unp.nominal_values(y4_unc), "o", label=r"$U = 0{,}5\ $V")
+plt.plot(unp.nominal_values(x5_unc), unp.nominal_values(y5_unc), "o", label=r"$U = 0{,}58\ $V")
+plt.plot(unp.nominal_values(x4_unc), unp.nominal_values(y4_unc), "--", color="#5e5e5e", linewidth=1)
+plt.plot(unp.nominal_values(x5_unc), unp.nominal_values(y5_unc), "--", color="#5e5e5e", linewidth=1)
+
+graf_oblika(r"Graf $I_C(T)$", r"$T\ $(K)", "$I_C\ $(A)", 1)
+
+plt.show()
+
+
+# Graf logaritmiranega I_C
+
+y4_unc_log = unp.uarray(np.log(unp.nominal_values(y4_unc[2:])), unp.std_devs(y4_unc[2:]) / unp.nominal_values(y4_unc[2:]))
+y5_unc_log = unp.uarray(np.log(unp.nominal_values(y5_unc[2:])), unp.std_devs(y5_unc[2:]) / unp.nominal_values(y5_unc[2:]))
+
+fit4 = fit_napake(x4_unc[2:], y4_unc_log, lin_fun2, 0)
+fit5 = fit_napake(x5_unc[2:], y5_unc_log, lin_fun2, 0)
+
+# graf_errorbar(x4_unc[2:], y4_unc_log, r"$U = 0{,}5\ $V")
+# graf_errorbar(x5_unc[2:], y5_unc_log, r"$U = 0{,}58\ $V")
+
+plt.plot(unp.nominal_values(x4_unc[2:]), unp.nominal_values(y4_unc_log), "o", label=r"$U = 0{,}5\ $V")
+plt.plot(unp.nominal_values(x5_unc[2:]), unp.nominal_values(y5_unc_log), "o", label=r"$U = 0{,}58\ $V")
+
+
+x_limits = plt.xlim()
+y_limits = plt.ylim()
+plt.ylim(y_limits)
+plt.xlim(x_limits)
+
+graf_oblika(r"Graf log$(I_C)(T)$", r"$T\ $[K]", "log$(I_C)\ $[A]", 1)
+
+graf_fit(x4_unc[2:], y4_unc_log, fit4, "")
+graf_fit(x5_unc[2:], y5_unc_log, fit5, "")
 
 plt.show()
