@@ -87,6 +87,11 @@ def fit_napake(x: unp.uarray, y: unp.uarray, funkcija=lin_fun2, print=0) -> np.n
     
     return out_mik
 
+def fit_napake_x(x: unp.uarray, y: unp.uarray, funkcija=lin_fun2, print=0) -> tuple:
+    '''Sprejme 2 unumpy arraya skupaj z funkcijo in izračuna fit, upoštevajoč y napake'''
+    optimizedParameters, pcov = opt.curve_fit(lin_fun, unp.nominal_values(x), unp.nominal_values(y), sigma=unp.std_devs(x), absolute_sigma=True)
+    return (optimizedParameters, pcov)
+
 def graf_errorbar(x: unp.uarray, y: unp.uarray, podatki_label="Izmerjeno"):
     '''Sprejme 2 unumpy arraya, fitane parametre in nariše errorbar prikaz podatkov'''
     # Podatki
@@ -98,18 +103,33 @@ def graf_errorbar(x: unp.uarray, y: unp.uarray, podatki_label="Izmerjeno"):
 
     plt.errorbar(x_mik, y_mik, xerr=x_err_mik, yerr=y_err_mik, linestyle='None', marker='.', capsize=3, label=podatki_label)
 
+def graf_fit_tuple(x: unp.uarray, y: unp.uarray, fit: tuple, fit_label="Fit"):
+    '''Sprejme 2 unumpy arraya, fitane parametre in nariše črtkan fit'''
+    # Podatki
+    x_mik = unp.nominal_values(x)
+    y_mik = unp.nominal_values(y)
+
+    x_fit_mik = np.linspace(x_mik[0] - x_mik[0] / 2, x_mik[-1] + x_mik[-1] / 2, 1000)
+
+    # y_fit_mik = lin_fun(*(fit[0]), x_fit_mik)
+    plt.plot(x_fit_mik, lin_fun(x_fit_mik, *(fit[0])),
+          "--", label=fit_label, color="#5e5e5e", linewidth=1)
+
 def graf_fit(x: unp.uarray, y: unp.uarray, fit: np.ndarray, fit_label="Fit"):
     '''Sprejme 2 unumpy arraya, fitane parametre in nariše črtkan fit'''
     # Podatki
     x_mik = unp.nominal_values(x)
     y_mik = unp.nominal_values(y)
 
-    x_err_mik = unp.std_devs(x)
-    y_err_mik = unp.std_devs(y)
-
     x_fit_mik = np.linspace(x_mik[0] - x_mik[0] / 2, x_mik[-1] + x_mik[-1] / 2, 1000)
-    y_fit_mik = lin_fun2(fit.beta, x_fit_mik)
-    plt.plot(x_fit_mik, y_fit_mik, "--", label=fit_label, color="#5e5e5e", linewidth=1)
+
+    if type(fit) is tuple:
+        y_fit_mik = lin_fun(*(fit_napake_x(x, y)[0]), x_fit_mik)
+        plt.plot(x_fit_mik, y_fit_mik, "--", label=fit_label, color="#5e5e5e", linewidth=1)
+
+    else:
+        y_fit_mik = lin_fun2(fit.beta, x_fit_mik)
+        plt.plot(x_fit_mik, y_fit_mik, "--", label=fit_label, color="#5e5e5e", linewidth=1)
 
 def graf_oblika(Naslov: str, x_os: str, y_os: str, legenda=1):
     x_limits = plt.xlim()
@@ -166,9 +186,16 @@ x3_unc = unp.uarray(a3.T[0], np.ones(np.shape(a3.T[0])) * 0.005)
 
 # Fitanje in izris grafa za 1. del vaje
 
+fit1_alt = fit_napake_x(x1_unc, y1_unc)
+fit2_alt = fit_napake_x(x2_unc, y2_unc)
+fit3_alt = fit_napake_x(x3_unc, y3_unc)
+
+
 fit1 = fit_napake(x1_unc, y1_unc)
 fit2 = fit_napake(x2_unc, y2_unc)
 fit3 = fit_napake(x3_unc, y3_unc)
+
+# print("AAAAAAAAAAAAAAAA", unc.ufloat(fit1.beta[0], fit1.sd_beta[0]), unc.ufloat(fit1_alt[0], np.sqrt(pcov1_alt[0][0])))
 
 
 graf_errorbar(x1_unc, y1_unc, "$14{,}1\ ^\circ$C")
@@ -180,6 +207,9 @@ y_limits = plt.ylim()
 plt.ylim(y_limits)
 plt.xlim(x_limits)
 
+# graf_fit_tuple(x1_unc, y1_unc, fit1_alt, "")
+# graf_fit_tuple(x2_unc, y2_unc, fit2_alt, "")
+# graf_fit_tuple(x3_unc, y3_unc, fit3_alt, "")
 graf_fit(x1_unc, y1_unc, fit1, "")
 graf_fit(x2_unc, y2_unc, fit2, "")
 graf_fit(x3_unc, y3_unc, fit3, "")
@@ -197,6 +227,10 @@ plt.show()
 kb1 = (unc.ufloat(fit1.beta[0], fit1.sd_beta[0]) * ((273 + 14.1) / 1.6e-19))**(-1)
 kb2 = (unc.ufloat(fit2.beta[0], fit2.sd_beta[0]) * ((273 + 34.1) / 1.6e-19))**(-1)
 kb3 = (unc.ufloat(fit3.beta[0], fit3.sd_beta[0]) * ((273 + 53.2) / 1.6e-19))**(-1)
+
+# kb1 = (unc.ufloat(fit1_alt[0][0], np.sqrt(fit1_alt[1][0][0])) * ((273 + 14.1) / 1.6e-19))**(-1)
+# kb2 = (unc.ufloat(fit2_alt[0][0], np.sqrt(fit2_alt[1][0][0])) * ((273 + 14.1) / 1.6e-19))**(-1)
+# kb3 = (unc.ufloat(fit3_alt[0][0], np.sqrt(fit3_alt[1][0][0])) * ((273 + 14.1) / 1.6e-19))**(-1)
 
 k_B_arr = np.array([kb1, kb2, kb3])
 
@@ -266,16 +300,16 @@ plt.show()
 
 # Graf logaritmiranega I_C
 
-y4_unc_log = unp.uarray(np.log(unp.nominal_values(y4_unc[2:])), unp.std_devs(y4_unc[2:]) / unp.nominal_values(y4_unc[2:]))
+y4_unc_log = unp.uarray(np.log(unp.nominal_values(y4_unc[3:])), unp.std_devs(y4_unc[3:]) / unp.nominal_values(y4_unc[3:]))
 y5_unc_log = unp.uarray(np.log(unp.nominal_values(y5_unc[2:])), unp.std_devs(y5_unc[2:]) / unp.nominal_values(y5_unc[2:]))
 
-fit4 = fit_napake(x4_unc[2:], y4_unc_log, lin_fun2, 0)
+fit4 = fit_napake(x4_unc[3:], y4_unc_log, lin_fun2, 0)
 fit5 = fit_napake(x5_unc[2:], y5_unc_log, lin_fun2, 0)
 
 # graf_errorbar(x4_unc[2:], y4_unc_log, r"$U = 0{,}5\ $V")
 # graf_errorbar(x5_unc[2:], y5_unc_log, r"$U = 0{,}58\ $V")
 
-plt.plot(unp.nominal_values(x4_unc[2:]), unp.nominal_values(y4_unc_log), "o", label=r"$U = 0{,}5\ $V")
+plt.plot(unp.nominal_values(x4_unc[3:]), unp.nominal_values(y4_unc_log), "o", label=r"$U = 0{,}5\ $V")
 plt.plot(unp.nominal_values(x5_unc[2:]), unp.nominal_values(y5_unc_log), "o", label=r"$U = 0{,}58\ $V")
 
 
@@ -286,7 +320,7 @@ plt.xlim(x_limits)
 
 graf_oblika(r"Graf log$(I_C)(T)$", r"$T\ $[K]", "log$(I_C)\ $[A]", 1)
 
-graf_fit(x4_unc[2:], y4_unc_log, fit4, "")
+graf_fit(x4_unc[3:], y4_unc_log, fit4, "")
 graf_fit(x5_unc[2:], y5_unc_log, fit5, "")
 
 plt.show()
