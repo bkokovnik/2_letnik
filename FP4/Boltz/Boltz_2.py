@@ -216,7 +216,7 @@ graf_fit(x3_unc, y3_unc, fit3, "")
 
 graf_oblika(r"Diagram ln$(I_C / I_1)$ proti $U_{BE}$ pri različnih temperaturah", r"$U_{BE}$ [V]", r"ln$(I_C / I_1)$")
 
-# plt.savefig('FP4\Boltz\plot.pdf', bbox_inches='tight', pad_inches=0.1)
+plt.savefig('FP4\Boltz\Grafi\log_Tok_Napetost.pdf', bbox_inches='tight', pad_inches=0.1)
 plt.show()
 
 
@@ -244,13 +244,13 @@ print(f"Obteženo povprečje vrednosti k_B: {obtezeno_povprecje(k_B_arr)}")
 
 a4 = np.genfromtxt(r"FP4\Boltz\Podatki\U_0_5.txt", delimiter='\t', encoding="utf-8")
 
-y4_unc = unp.uarray(a4.T[1], (np.ones(np.shape(a4.T[1])) * 0.001e-6))
+y4_unc = unp.uarray(a4.T[1], (np.ones(np.shape(a4.T[1])) * 0.001e-6)) * 10**3
 x4_unc = unp.uarray(a4.T[0], np.ones(np.shape(a4.T[0])) * 0.1) + 273
 
 
 a5 = np.genfromtxt(r"FP4\Boltz\Podatki\U_0_58.txt", delimiter='\t', encoding="utf-8")
 
-y5_unc = unp.uarray(a5.T[1], (np.ones(np.shape(a5.T[1])) * 0.001e-6))
+y5_unc = unp.uarray(a5.T[1], (np.ones(np.shape(a5.T[1])) * 0.001e-6)) * 10**3
 x5_unc = unp.uarray(a5.T[0], np.ones(np.shape(a5.T[0])) * 0.1) + 273
 
 
@@ -293,8 +293,9 @@ plt.plot(unp.nominal_values(x5_unc), unp.nominal_values(y5_unc), "o", label=r"$U
 plt.plot(unp.nominal_values(x4_unc), unp.nominal_values(y4_unc), "--", color="#5e5e5e", linewidth=1)
 plt.plot(unp.nominal_values(x5_unc), unp.nominal_values(y5_unc), "--", color="#5e5e5e", linewidth=1)
 
-graf_oblika(r"Graf $I_C(T)$", r"$T\ $(K)", "$I_C\ $(A)", 1)
+graf_oblika(r"Temperaturna odvisnost kolektorskega toka", r"$T\ $[K]", "$I_C\ $[mA]", 1)
 
+plt.savefig('FP4\Boltz\Grafi\Tok_Temp.pdf', bbox_inches='tight', pad_inches=0.1)
 plt.show()
 
 
@@ -318,9 +319,10 @@ y_limits = plt.ylim()
 plt.ylim(y_limits)
 plt.xlim(x_limits)
 
-graf_oblika(r"Graf log$(I_C)(T)$", r"$T\ $[K]", "log$(I_C)\ $[A]", 1)
+graf_oblika(r"Logaritmirana temperaturna odvisnost kolektorskega toka", r"$T\ $[K]", "log$(I_C / I_1)$", 1)
 
-graf_fit(x4_unc[3:], y4_unc_log, fit4, "")
-graf_fit(x5_unc[2:], y5_unc_log, fit5, "")
+# graf_fit(x4_unc[3:], y4_unc_log, fit4, "")
+# graf_fit(x5_unc[2:], y5_unc_log, fit5, "")
 
+plt.savefig('FP4\Boltz\Grafi\log_Tok_temp.pdf', bbox_inches='tight', pad_inches=0.1)
 plt.show()

@@ -89,7 +89,7 @@ def fit_napake(x: unp.uarray, y: unp.uarray, funkcija=lin_fun2, print=0) -> np.n
 
 def fit_napake_x(x: unp.uarray, y: unp.uarray, funkcija=lin_fun2, print=0) -> tuple:
     '''Sprejme 2 unumpy arraya skupaj z funkcijo in izračuna fit, upoštevajoč y napake'''
-    optimizedParameters, pcov = opt.curve_fit(lin_fun, unp.nominal_values(x), unp.nominal_values(y), sigma=unp.std_devs(x), absolute_sigma=True)
+    optimizedParameters, pcov = opt.curve_fit(lin_fun, unp.nominal_values(x), unp.nominal_values(y))#, sigma=unp.std_devs(y), absolute_sigma=True)
     return (optimizedParameters, pcov)
 
 def graf_errorbar(x: unp.uarray, y: unp.uarray, podatki_label="Izmerjeno"):
@@ -109,7 +109,7 @@ def graf_fit_tuple(x: unp.uarray, y: unp.uarray, fit: tuple, fit_label="Fit"):
     x_mik = unp.nominal_values(x)
     y_mik = unp.nominal_values(y)
 
-    x_fit_mik = np.linspace(x_mik[0] - x_mik[0] / 2, x_mik[-1] + x_mik[-1] / 2, 1000)
+    x_fit_mik = np.linspace(x_mik[0] - 2 * x_mik[0], x_mik[-1] + x_mik[-1], 1000)
 
     # y_fit_mik = lin_fun(*(fit[0]), x_fit_mik)
     plt.plot(x_fit_mik, lin_fun(x_fit_mik, *(fit[0])),
@@ -124,7 +124,7 @@ def graf_fit(x: unp.uarray, y: unp.uarray, fit: np.ndarray, fit_label="Fit"):
     x_fit_mik = np.linspace(x_mik[0] - x_mik[0] / 2, x_mik[-1] + x_mik[-1] / 2, 1000)
 
     if type(fit) is tuple:
-        y_fit_mik = lin_fun(*(fit_napake_x(x, y)[0]), x_fit_mik)
+        y_fit_mik = lin_fun(fit[0][0], fit[0][1], x_fit_mik)
         plt.plot(x_fit_mik, y_fit_mik, "--", label=fit_label, color="#5e5e5e", linewidth=1)
 
     else:
@@ -159,135 +159,88 @@ def graf_oblika(Naslov: str, x_os: str, y_os: str, legenda=1):
 
 #####################################################################################################################################################
 
-with open("FP4\FraHertz\Podatki\TEK0004.CSV", "r") as dat:
-    x = []
-    cas = []
-    i = 1
-    for vrstica in dat:
-        while i < 19:
-            i +=1
-            break
+S189_t = [(-35.4, 1.008), (-30.4, 0.82), (-25.2, 0.5422), (-20.2, 0.3467), (-15.6, 0.1432)]
+S160_t = [(-35.4, 0.93), (-30.4, 0.7714), (-25.4, 0.5222), (-20.4, 0.2967), (-15.6, 0.1482)]
+S138_t = [(-31.4, 2.0733), (-26.0, 1.492), (-20.6, 1.06), (-15.2, 0.724), (-10.4, 0.4767)]
+S119_t = [(-21.0, 2.1333), (-15.6, 1.5846), (-10.4, 0.8383), (-5.8, 0.5752)]
 
-        else:
-            G = vrstica.strip("\n").replace(",", "").split(" ")
-            t = float(G[0])
-            U = float(G[-1])
-            # print(U, t)
-            x.append(U)
-            cas.append(t)
+S189 = []
+S160 = []
+S138 = []
+S119 = []
 
-# plt.plot(cas, x)
+x1 = [1, 2, 3, 4, 5]
+x2 = [2, 3, 4, 5]
+
+
+i = 0
+for U in S189_t:
+    S189.append(U[0])
+
+i = 0
+for U in S160_t:
+    S160.append(U[0])
+
+i = 0
+for U in S138_t:
+    S138.append(U[0])
+
+i = 0
+for U in S119_t:
+    S119.append(U[0])
+
+
+# print(S189, S160, S138, S119)
+
+S189 = unp.uarray(S189, [0.1 for i in range(len(S189))])
+S160 = unp.uarray(S160, [0.1 for i in range(len(S189))])
+S138 = unp.uarray(S138, [0.1 for i in range(len(S189))])
+S119 = unp.uarray(S119, [0.1 for i in range(len(S119))])
+
+fit_189 = fit_napake_x(x1, S189, print=1)
+fit_160 = fit_napake_x(x1, S160, print=1)
+fit_138 = fit_napake_x(x1, S138, print=1)
+fit_119 = fit_napake_x(x2, S119, print=1)
+
+graf_errorbar(x1, S189, "$T = 189\ $ [$^\circ$C]")
+graf_errorbar(x1, S160, "$T = 160\ $ [$^\circ$C]")
+graf_errorbar(x1, S138, "$T = 138\ $ [$^\circ$C]")
+graf_errorbar(x2, S119, "$T = 119\ $ [$^\circ$C]")
+
+x_limits = plt.xlim()
+y_limits = plt.ylim()
+plt.ylim(y_limits)
+plt.xlim(x_limits)
+
+graf_fit_tuple(x1, S189, fit_189, "")
+graf_fit_tuple(x1, S160, fit_160, "")
+graf_fit_tuple(x1, S138, fit_138, "")
+graf_fit_tuple(x2, S119, fit_119, "")
+
+graf_oblika(r"Napetosti zaporednih vrhov", r"$N$", r"$U_1$ [V]")
+
+
+plt.savefig('FP4\FraHertz\Slike\Delte.pdf', bbox_inches='tight', pad_inches=0.1)
+
+plt.show()
+
+de189 = unc.ufloat(fit_189[0][0], np.sqrt(fit_189[1][0][0]))
+de160 = unc.ufloat(fit_160[0][0], np.sqrt(fit_160[1][0][0]))
+de138 = unc.ufloat(fit_138[0][0], np.sqrt(fit_138[1][0][0]))
+de119 = unc.ufloat(fit_119[0][0], np.sqrt(fit_119[1][0][0]))
+
+print(f"T = 189: {de189}")
+print(f"T = 160: {de160}")
+print(f"T = 138: {de138}")
+print(f"T = 119: {de119}")
+
+print(f"Obteženo povprečje vseh: {obtezeno_povprecje(np.array([de189, de160, de138, de119]))}")
+
+
+
+# plt.plot(x1, S189)
+# plt.plot(x1, S160)
+# plt.plot(x1, S138)
+# plt.plot(x2, S119)
+
 # plt.show()
-
-
-
-with open("FP4\FraHertz\Podatki\TEK0005.CSV", "r") as dat:
-    y = []
-    cas = []
-    i = 1
-    for vrstica in dat:
-        while i < 19:
-            i +=1
-            break
-
-        else:
-            G = vrstica.strip("\n").replace(",", "").split(" ")
-            t = float(G[0])
-            U = float(G[-1])
-            # print(U, t)
-            y.append(U)
-            cas.append(t)
-
-
-# plt.plot(x, y)
-# plt.show()
-
-x = np.array(x)
-y = np.array(y) / (10 ** 6)
-
-sorted_indices = np.argsort(x)
-x = x[sorted_indices]
-y = y[sorted_indices]
-
-# plt.plot(x, y)
-# plt.show()
-
-def average_y_at_unique_x(x, y):
-    unique_x = np.unique(x)
-    averaged_y = np.zeros_like(unique_x, dtype=float)
-    counts = np.zeros_like(unique_x, dtype=int)
-
-    for i, ux in enumerate(unique_x):
-        indices = np.where(x == ux)[0]
-        averaged_y[i] = np.mean(y[indices])
-        counts[i] = len(indices)
-
-    return unique_x, averaged_y, counts
-
-x, y, n = average_y_at_unique_x(x, y)
-
-# plt.plot(x, y)
-
-
-
-
-
-
-def find_and_plot_peaks_smooth(x, y, sensitivity=0.12, window_length=12, polyorder=3):
-    # Smooth the data
-    y_smooth = savgol_filter(y, window_length, polyorder)
-
-    # Find peaks
-    peaks, _ = find_peaks(y_smooth, height=sensitivity*np.max(y_smooth))
-
-    # Plot original graph
-    # plt.figure(figsize=(10, 6))
-    plt.plot(x, y, "o", label='Podatki')
-
-    # Plot smoothed data
-    plt.plot(x, y_smooth, "--", label=r"Savitzky-Golay filter", color="#5e5e5e", linewidth=1)
-
-    # Plot peaks
-    peak_x = [x[i] for i in peaks]
-    peak_y = [y[i] for i in peaks]
-
-    # peak_y = peak_y[4:]
-    # peak_x = peak_x[4:]
-    # plt.plot(peak_x, peak_y, 'ro', markersize=8, label='Vrhovi')
-
-    # # Annotate peak values
-    # for i, (px, py) in enumerate(zip(peak_x, peak_y)):
-    #     plt.text(px, py, f'{px:.2f}', ha='center', va='bottom')
-
-    plt.ylabel("$I_2\ $ [A]")
-    plt.xlabel("$U_1\ $ [V]")
-    plt.title(r'$T = 26\ ^\circ$C')
-    plt.legend(loc="upper right")
-    
-    x_limits = plt.xlim()
-    y_limits = plt.ylim()
-
-    x_ticks_major = plt.gca().get_xticks()
-    y_ticks_major = plt.gca().get_yticks()
-
-    x_ticks_minor = np.concatenate([np.arange(start, stop, (stop - start) / 5)[1:] for start, stop in zip(x_ticks_major[:-1], x_ticks_major[1:])])
-    y_ticks_minor = np.concatenate([np.arange(start, stop, (stop - start) / 5)[1:] for start, stop in zip(y_ticks_major[:-1], y_ticks_major[1:])])
-
-    plt.xticks(x_ticks_major)
-    plt.xticks(x_ticks_minor, minor=True)
-
-    plt.yticks(y_ticks_major)
-    plt.yticks(y_ticks_minor, minor=True)
-
-    plt.grid(which='minor', alpha=0.2)
-    plt.grid(which='major', alpha=0.5)
-
-    plt.savefig('FP4\FraHertz\Slike\T26.pdf', bbox_inches='tight', pad_inches=0.1)
-
-    plt.show()
-
-    return peak_x, peak_y
-
-peak_x, peak_y = find_and_plot_peaks_smooth(x, y, 0.06, 16, 3)
-
-print([(xp, float(f'{(yp * 10**7):.4f}')) for xp, yp in zip(peak_x, peak_y)])
