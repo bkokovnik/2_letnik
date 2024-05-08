@@ -21,7 +21,7 @@ from typing import Callable
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Computer Modern Serif",
-    "font.size": 15
+    "font.size": 18
 })
 
 #####################################################################################################################################################
@@ -159,38 +159,102 @@ def graf_oblika(Naslov: str, x_os: str, y_os: str, legenda=1):
 
 #####################################################################################################################################################
 
-a1 = np.genfromtxt(r"FP4\KarIU\Podatki\L1KHZ.csv", delimiter=',', encoding="utf-8", skip_header=15)
+### Navadna dioda
 
-f = unc.ufloat(989.5, 0.2)
+a1 = np.genfromtxt(r"FP4\KarIU\Podatki\DN200HZ.csv", delimiter=',', encoding="utf-8", skip_header=15)
 
-U1 = a1[:, 1] / 1000
-U2 = a1[:, 2]
+U1 = a1[:, 1]
+I1 = a1[:, 2] / 1000
 
-U1 = U1 - (np.max(U1) + np.min(U1)) / 2
-U2 = U2 - (np.max(U2) + np.min(U2)) / 2
+U_kol1 = unc.ufloat(0.55, 0.05)
 
-U1_unc = unp.uarray(U1, np.ones(np.shape(U1)) * 0.000242)
-U2_unc = unp.uarray(U2, np.ones(np.shape(U2)) * 0)
+plt.plot(U1, I1 * 10e3, ".", markersize=3)
 
-plt.plot(U2, U1 * 1000, ".", markersize=3)
+graf_oblika("Karakteristika diode", r"$U\ $ [V]", r"$I$ [mA]", legenda=0)
 
-graf_oblika("Karakteristika tuljave", r"$U\ $ [V]", r"$I$ [mA]", legenda=0)
-
-dI = unc.ufloat(np.max(U1) - np.min(U1) - 0.00016, 0.00016)
-dU = unc.ufloat(np.max(U2) - np.min(U2) - 0.09, 0.09)
-
-print(dI, dU)
-
-Z = dU/dI
-L = Z / (2 * np.pi * f)
-
-print(L)
-
-plt.savefig(r"FP4\KarIU\Slike\Tuljava.pdf", bbox_inches='tight', pad_inches=0.1)
+plt.savefig(r"FP4\KarIU\Slike\Di_Navadna.pdf", bbox_inches='tight', pad_inches=0.1)
 plt.show()
 
-dxc = unc.ufloat(2.77, 0.05)
-dyc = unc.ufloat(17.6, 0.5) / 1000
+print(f"Koleno navadne diode: {U_kol1}")
 
-C = 1 / (2 * np.pi * f * dxc/dyc)
-print(f"C: {C}")
+
+
+### Bela dioda
+
+a1 = np.genfromtxt(r"FP4\KarIU\Podatki\DB200HZ.csv", delimiter=',', encoding="utf-8", skip_header=15)
+
+U1 = a1[:, 1]
+I1 = a1[:, 2] / 1000
+
+U_kol1 = unc.ufloat(1.12, 0.05)
+
+plt.plot(U1, I1 * 10e3, ".", markersize=3)
+
+graf_oblika("Karakteristika bele LED", r"$U\ $ [V]", r"$I$ [mA]", legenda=0)
+
+plt.savefig(r"FP4\KarIU\Slike\Di_Bela.pdf", bbox_inches='tight', pad_inches=0.1)
+plt.show()
+
+print(f"Koleno bele diode: {U_kol1}")
+
+
+
+### Rdeča dioda
+
+a1 = np.genfromtxt(r"FP4\KarIU\Podatki\DR200HZ.csv", delimiter=',', encoding="utf-8", skip_header=15)
+
+U1 = a1[:, 1]
+I1 = a1[:, 2] / 1000
+
+U_kol1 = unc.ufloat(1.9, 0.05)
+
+plt.plot(U1, I1 * 10e3, ".", markersize=3)
+
+graf_oblika("Karakteristika rdeče LED", r"$U\ $ [V]", r"$I$ [mA]", legenda=0)
+
+plt.savefig(r"FP4\KarIU\Slike\Di_Rdeča.pdf", bbox_inches='tight', pad_inches=0.1)
+plt.show()
+
+print(f"Koleno rdeče diode: {U_kol1}")
+
+
+
+### Zelena dioda
+
+a1 = np.genfromtxt(r"FP4\KarIU\Podatki\Dz200HZ.csv", delimiter=',', encoding="utf-8", skip_header=15)
+
+U1 = a1[:, 1]
+I1 = a1[:, 2] / 1000
+
+U_kol1 = unc.ufloat(1.84, 0.05)
+
+plt.plot(U1, I1 * 10e3, ".", markersize=3)
+
+graf_oblika("Karakteristika zelene diode", r"$U\ $ [V]", r"$I$ [mA]", legenda=0)
+
+plt.savefig(r"FP4\KarIU\Slike\Di_Zelena.pdf", bbox_inches='tight', pad_inches=0.1)
+plt.show()
+
+print(f"Koleno zelene diode: {U_kol1}")
+
+
+
+### Navadna dioda
+
+a1 = np.genfromtxt(r"FP4\KarIU\Podatki\ZN200HZ.csv", delimiter=',', encoding="utf-8", skip_header=15)
+
+U1 = a1[:, 1]
+I1 = a1[:, 2] / 1000
+
+U_kol1 = unc.ufloat(-6,72, 0.05)
+U_kol2 = unc.ufloat(0.76, 0.05)
+
+
+plt.plot(U1, I1 * 10e3, ".", markersize=3)
+
+graf_oblika("Karakteristika Zenerjeve diode", r"$U\ $ [V]", r"$I$ [mA]", legenda=0)
+
+plt.savefig(r"FP4\KarIU\Slike\Di_Zenner.pdf", bbox_inches='tight', pad_inches=0.1)
+plt.show()
+
+print(f"Koleni Zener diode: {U_kol1}, {U_kol2}")

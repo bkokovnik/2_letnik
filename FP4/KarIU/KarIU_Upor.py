@@ -179,4 +179,6 @@ optim, pcov = fit_napake_x(U1_unc, U2_unc)
 upornost = unc.ufloat(optim[0], np.sqrt(pcov[0][0]))
 print(upornost)
 
+
+plt.savefig(r"FP4\KarIU\Slike\Upor.pdf", bbox_inches='tight', pad_inches=0.1)
 plt.show()
