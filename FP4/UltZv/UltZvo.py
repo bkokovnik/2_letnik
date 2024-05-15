@@ -234,3 +234,90 @@ vrhovi_zareze = (unp.uarray([1.11, 1.32, 1.63], [0.05, 0.05, 0.05]) + unc.ufloat
 tri_zareze = vrhovi_zareze * c_jeklo / 2
 
 print(f"Dimenzije treh zarez, ene zraven druge: {tri_zareze * 1000}")
+
+
+
+### Hitrost v materialih
+
+## Longitudinalno
+
+c_vode = 1483.1 + 2.5 * (unc.ufloat(0.6, 0.2))
+rho_jekla = 7800
+rho_aluminija = 2700
+
+
+
+
+# Aluminij
+
+l_aluminij = unc.ufloat(20.04, 0.01) / 1000
+
+cas_aluminij = (unc.ufloat(-7.8, 1) - unc.ufloat(-16.5, 1)) * 10**(-6)
+
+cas_aluminij = np.asarray(cas_aluminij)
+
+d_voda_alu = cas_aluminij * c_vode / 2
+
+print(f"razdalja v vodi pri aluminiju: {d_voda_alu * 1000}")
+
+
+# Jeklo
+
+l_jeklo = unc.ufloat(20.45, 0.01) / 1000
+
+cas_jeklo = (unc.ufloat(15.9, 1) - unc.ufloat(7.5, 1)) * 10**(-6)
+
+cas_jeklo = np.asarray(cas_jeklo)
+
+d_voda_jek = cas_jeklo * c_vode / 2
+
+print(f"razdalja v vodi pri jeklu: {d_voda_jek * 1000}")
+
+
+
+## Transverzalno
+
+#Aluminij
+
+cas_aluminij_trans = (unc.ufloat(-0.7, 1) - unc.ufloat(-15.9, 1)) * 10**(-6)
+
+cas_aluminij_trans = np.asarray(cas_aluminij_trans)
+
+d_voda_alu_trans = cas_aluminij_trans * c_vode / 2
+
+print(f"razdalja v vodi pri aluminiju: {d_voda_alu_trans * 1000}")
+
+
+# Jeklo
+
+cas_jeklo_trans = (unc.ufloat(15.9, 1) - unc.ufloat(0.06, 1)) * 10**(-6)
+
+cas_jeklo_trans = np.asarray(cas_jeklo_trans)
+
+d_voda_jek_trans = cas_jeklo_trans * c_vode / 2
+
+print(f"razdalja v vodi pri jeklu: {d_voda_jek_trans * 1000}")
+
+c_a_l = l_aluminij * c_vode / d_voda_alu
+c_j_l = l_jeklo * c_vode / d_voda_jek
+c_a_t = l_aluminij * c_vode / d_voda_alu_trans
+c_j_t = l_jeklo * c_vode / d_voda_jek_trans
+
+print(f"Longitudinalna, aluminij: {l_aluminij * c_vode / d_voda_alu}")
+print(f"Longitudinalna, jeklo: {l_jeklo * c_vode / d_voda_jek}")
+print(f"Transverzalna, aluminij: {l_aluminij * c_vode / d_voda_alu_trans}")
+print(f"Transverzalna, jeklo: {l_jeklo * c_vode / d_voda_jek_trans}")
+
+
+p_j = (2 * c_j_t**2 - c_j_l**2) / (2 * (c_j_t**2 - c_j_l**2))
+p_a = (2 * c_a_t**2 - c_a_l**2) / (2 * (c_a_t**2 - c_a_l**2))
+
+print(f"Poisson jeklo: {(2 * c_j_t**2 - c_j_l**2) / (2 * (c_j_t**2 - c_j_l**2))}")
+print(f"Poisson aluminij: {(2 * c_a_t**2 - c_a_l**2) / (2 * (c_a_t**2 - c_a_l**2))}")
+
+print(f"E jeklo: {(c_j_l**2 * rho_jekla * (1 + p_j) * (1 - 2 * p_j)) / (1 - p_j)}")
+print(f"E aluminij: {(c_a_l**2 * rho_aluminija * (1 + p_a) * (1 - 2 * p_a)) / (1 - p_a)}")
+
+
+print(f"G jeklo: {rho_jekla * c_j_t**2}")
+print(f"G aluminij: {rho_aluminija * c_a_t**2}")

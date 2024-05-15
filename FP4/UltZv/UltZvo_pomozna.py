@@ -181,13 +181,13 @@ with open(r"FP4\UltZv\Podatki\sds00002.csv", "r") as dat:
 
 plt.plot(np.asarray(cas_DO) * 10**(6), U_DO)
 
-x_limits = plt.xlim()
-y_limits = plt.ylim()
+# x_limits = plt.xlim()
+# y_limits = plt.ylim()
 
-graf_oblika(r"Slika odbojev na reži", r"$t$ [$\mu $s]", r"$U$ [V]", 0)
+# graf_oblika(r"Slika odbojev na reži", r"$t$ [$\mu $s]", r"$U$ [V]", 0)
 
-plt.ylim(y_limits)
-plt.xlim(-20, 40)
+# plt.ylim(y_limits)
+# plt.xlim(-20, 40)
 
-plt.savefig(r"FP4\UltZv\Slike\reza.pdf", bbox_inches='tight', pad_inches=0.1)
+# plt.savefig(r"FP4\UltZv\Slike\reza.pdf", bbox_inches='tight', pad_inches=0.1)
 plt.show()
