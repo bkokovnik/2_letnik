@@ -1,0 +1,55 @@
+\documentclass[12pt]{article}
+\usepackage{physics}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{blindtext}
+\usepackage[a4paper, total={16cm, 25cm}]{geometry}
+\usepackage{amsmath}
+\usepackage{upgreek}
+\usepackage[slovene]{babel}
+\usepackage{placeins}
+\usepackage{amsmath}
+\usepackage{subcaption}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{icomma}
+\usepackage{pgfplots}
+\usepackage{leftindex}
+\usepackage[final]{hyperref}
+\usepackage{upgreek}
+\usepackage{multirow}
+
+\DeclareMathOperator*{\di}{\mathrm{d}\!}
+\def\at{
+  \left.
+  \vphantom{\int}
+  \right|
+}
+
+\title{Spektrometer}
+\author{Bor Kokovnik}
+\date{Maj 2024}
+\setlength\parindent{0pt}
+
+\begin{document}
+
+\maketitle
+
+\section{Uvod}
+Spektroskop je priprava za merjenje spektrov, to je porazdelitve svetlobnega toka po frekvenci ali valovni dolžini. Uporabljali bomo klasični optični spektroskop na prizmo. Njegovo delovanje temelji na principu, da se svetloba v prizmi iz stekla razcepi na raznobarvne komponente. Naš detektor, oko, je najbolj občutljiv na svetlobo pri $550\ $nm, kar je potrebno upoštevati pri meritvi.\\
+
+Osnovne komponente spektroskopa so:
+\begin{itemize}
+    \item Vstopna reža in kolimator, to je cev, ki ima na koncu lečo. Goriščna razdalja leče je enaka razdalji med režo in lečo. Kolimator pretvori divergentni snop svetlobe iz reže v vzporednega (kolimiranega).
+    \item Osrednji del spektroskopa je prizma disperzijo lomnega količnika $n(\lambda)$. Za prizmo vsako komponento svetlobe pričakujemo pri drugem kotu glede na vstopni kolimirani snop.
+    \item Za prizmo imamo vrtljivi teleskop, ki v svoji goriščni ravnini zbere sliko reže, kar pa velja za vsako komponento spektra posebej.
+\end{itemize}
+
+ Pri normalni disperziji, kakršno imajo vsi sestavni deli prizme, je lomni količnik za rdečo svetlobo manjši od tistega za modro svetlobo in se zato modra svetloba na prizmi lomi za večji kot. Večinoma lahko disperzijo lomnega količnika opišemo s tako imenovano Sellmeierjevo formulo
+ \begin{equation}
+     n(\lambda)^2 = 1 + \frac{A \lambda ^2}{\lambda ^2 - \lambda ^2_0}
+     \label{eq1}
+ \end{equation}
+ kjer je A tako imenovana moč oscilatorja in λ0 valovna dolžina, ki ustreza njegovi resonanci.
+\\
+
+
+\end{document}
