@@ -87,6 +87,35 @@ def fit_napake(x: unp.uarray, y: unp.uarray, funkcija=lin_fun2, print=0) -> np.n
     
     return out_mik
 
+def fit_napake1(x: unp.uarray, y: unp.uarray, funkcija=lin_fun2, print=0) -> np.ndarray:
+
+    '''Sprejme 2 unumpy arraya skupaj z funkcijo in izračuna fit, upoštevajoč x in y napake'''
+    # Podatki
+    x_mik = unp.nominal_values(x)
+    y_mik = unp.nominal_values(y)
+
+    x_err_mik = unp.std_devs(x)
+    y_err_mik = unp.std_devs(y)
+
+    # Create a model for fitting.
+    lin_model_mik = Model(funkcija)
+
+    # Create a RealData object using our initiated data from above.
+    data_mik = RealData(x_mik, y_mik, sx=x_err_mik, sy=y_err_mik)
+
+    # Set up ODR with the model and data.
+    odr_mik = ODR(data_mik, lin_model_mik, beta0=[1, 1, 1, 1], maxit=100000)
+
+    # odr_mik.set_job(maxit=10000)
+
+    # Run the regression.
+    out_mik = odr_mik.run()
+
+    if print == 1:
+        out_mik.pprint()
+    
+    return out_mik
+
 def fit_napake2(x: unp.uarray, y: unp.uarray, funkcija=lin_fun2, print=0) -> np.ndarray:
 
     '''Sprejme 2 unumpy arraya skupaj z funkcijo in izračuna fit, upoštevajoč x in y napake'''
@@ -205,20 +234,21 @@ def fun1(B, x):
 # optimizedParameters, pcov = opt.curve_fit(fun1_1, unp.nominal_values(phi1), unp.nominal_values(I1), np.array([1, 251, ]), sigma=unp.std_devs(I1),  absolute_sigma=True)
 
 
-# fit1 = fit_napake(phi1, I1, fun1, 1)
+fit1 = fit_napake1(phi1, I1, fun1, 1)
 
 # # graf_errorbar(phi1, I1)
-# plt.plot(unp.nominal_values(phi1), unp.nominal_values(I1), "o", label="Izmerjeno")
+plt.plot(unp.nominal_values(phi1), unp.nominal_values(I1), "o", label="Izmerjeno", color="black")
 
-# x_limits = plt.xlim()
-# y_limits = plt.ylim()
-# plt.ylim(y_limits)
-# plt.xlim(x_limits)
+x_limits = plt.xlim()
+y_limits = plt.ylim()
+plt.ylim(y_limits)
+plt.xlim(x_limits)
 
-# graf_fit(phi1, I1, fit1, fun1)
-# graf_oblika("Intenziteta v odvisnosti od kota polarizatorja", r"$\phi$ [rad]", r"$I$ [$\mu$A]")
+graf_fit(phi1, I1, fit1, fun1)
+graf_oblika("Intenziteta v odvisnosti od kota polarizatorja", r"$\phi$ [rad]", r"$I$ [$\mu$A]")
 
-# plt.show()
+# plt.savefig('FP4\ElOpt\Slike\V1.pdf', bbox_inches='tight', pad_inches=0.1)
+plt.show()
 
 
 
@@ -234,24 +264,25 @@ I2 = unp.uarray(I2, np.ones(np.shape(I2)) * 0.2) * 10 ** (-6)
 
 def fun2(B, x):
     return B[0] + B[1] * (np.sin(2 * x + B[2])) ** 2
+# def fun2_2(x, a, b, c):
+#     return a + b * (np.sin(2 * x + c)) ** 2
 
-# fit2 = fit_napake(phi2, I2, fun2, 1)
+fit2 = fit_napake1(phi2, I2, fun2, 1)
+# fit2 = fit_napake_x(phi2, I2, fun2_2)
 
-# graf_errorbar(phi2, I2)
+plt.plot(unp.nominal_values(phi2), unp.nominal_values(I2), "o", label="Izmerjeno", color="black")
 
-# x_limits = plt.xlim()
-# y_limits = plt.ylim()
-# plt.ylim(y_limits)
-# plt.xlim(x_limits)
+x_limits = plt.xlim()
+y_limits = plt.ylim()
+plt.ylim(y_limits)
+plt.xlim(x_limits)
 
-# # graf_fit(phi2, I2, fit2, fun2)
-# plt.plot(unp.nominal_values(phi2), unp.nominal_values(I2), "o", label="Izmerjeno")
-# graf_oblika("Intenziteta v odvisnosti od kota polarizatorja", r"$\phi$ [rad]", r"$I$ [$\mu$A]")
+graf_fit(phi2, I2, fit2, fun2)
 
-# plt.show()
+graf_oblika("Intenziteta v odvisnosti od kota vmesnega polarizatorja", r"$\phi$ [rad]", r"$I$ [A]")
 
-# plt.plot(phi2, I2)
-# plt.show()
+# plt.savefig('FP4\ElOpt\Slike\V2.pdf', bbox_inches='tight', pad_inches=0.1)
+plt.show()
 
 
 
@@ -268,42 +299,22 @@ I3_unc = unp.uarray(I3, np.ones(np.shape(U3)) * 0.1 * 10 ** (-6))
 
 def fun3(B, x):
     return B[0] + B[1] * (np.sin(B[2] * x ** 2 + B[3] / 2)) ** 2
-# def fun3(x, a, b, c, d):
-#     return a + b * (np.sin(c * x ** 2 + d / 2)) ** 2
-
-# fit3 = fit_napake(U3_unc, I3_unc, fun3, 1)
-
-# # # graf_errorbar(U3, I3)
-# plt.plot(unp.nominal_values(U3), unp.nominal_values(I3), "o", label="Izmerjeno")
-
-# # x_limits = plt.xlim()
-# # y_limits = plt.ylim()
-# # plt.ylim(y_limits)
-# # plt.xlim(x_limits)
-
-# graf_fit(U3_unc, I3_unc, fit3, fun3)
-# graf_oblika("Intenziteta v odvisnosti od kota polarizatorja", r"$\phi$ [rad]", r"$I$ [$\mu$A]")
-
-# # plt.show()
-
-# # plt.plot(U3, I3)
-# # plt.show()
-
-# # optimizedParameters, pcov = opt.curve_fit(fun3, unp.nominal_values(U3), unp.nominal_values(I3),
-# #                                           np.array([0.25 * 10 ** (-6), 15.75 * 10 ** (-6), 2.850 * 10 ** (-6), -0.74]),
-# #                                           bounds=(np.array([0.20 * 10 ** (-6), 15.5 * 10 ** (-6), 2.70 * 10 ** (-6), -0.8]),
-# #                                                   np.array([0.30 * 10 ** (-6), 16 * 10 ** (-6), 3 * 10 ** (-6), -0.7])))
-
-# # a = np.linspace(-1, -0.5, 50)
-# # plt.plot(U3, fun3(U3, *optimizedParameters))
 
 
-# # print(optimizedParameters)
-# # for i in a:
-# #     plt.plot(U3, fun3(U3, 0.25 * 10 ** (-6), 15.8 * 10 ** (-6), 2.850 * 10 ** (-6), i))
-# # plt.plot(U3, fun3(U3, 0.25 * 10 ** (-6), 15.75 * 10 ** (-6), 2.850 * 10 ** (-6), -0.74))
-# plt.plot(U3, I3, ".")
-# plt.show()
+fit3 = fit_napake(U3_unc, I3_unc, fun3, 1)
+
+plt.plot(unp.nominal_values(U3), unp.nominal_values(I3), "o", label="Izmerjeno", color="black")
+
+x_limits = plt.xlim()
+y_limits = plt.ylim()
+plt.ylim(y_limits)
+plt.xlim(x_limits)
+
+graf_fit(U3_unc, I3_unc, fit3, fun3)
+graf_oblika("Amplituda v odvisnosti od napetosti na Kerrovi celici", r"$U$ [V]", r"$I$ [A]")
+
+# plt.savefig('FP4\ElOpt\Slike\V3.pdf', bbox_inches='tight', pad_inches=0.1)
+plt.show()
 
 
 ### 4. del vaje
@@ -315,24 +326,22 @@ phi4 = unp.uarray(phi4, np.ones(np.shape(phi4))) * np.pi / 180
 I4 = unp.uarray(I4, np.ones(np.shape(I4)) * 0.2) * 10 ** (-6)
 
 
-# fit4 = fit_napake(phi4, I4, fun1)
+fit4 = fit_napake(phi4, I4, fun1)
 
-# # graf_errorbar(phi4, I4)
-# plt.plot(unp.nominal_values(phi4), unp.nominal_values(I4), "o", label="Izmerjeno")
+# graf_errorbar(phi4, I4)
+plt.plot(unp.nominal_values(phi4), unp.nominal_values(I4), "o", label="Izmerjeno", color="black")
 
-# x_limits = plt.xlim()
-# y_limits = plt.ylim()
-# plt.ylim(y_limits)
-# plt.xlim(x_limits)
+x_limits = plt.xlim()
+y_limits = plt.ylim()
+plt.ylim(y_limits)
+plt.xlim(x_limits)
 
-# graf_fit(phi4, I4, fit4, fun1)
+graf_fit(phi4, I4, fit4, fun1)
 
-# graf_oblika("Amplituda v odvisnosti od\nkota polarizatorja za tekočim kristalom", r"$\phi$ [rad]", r"$I$ [A]")
+graf_oblika("Amplituda v odvisnosti od\nkota polarizatorja za tekočim kristalom", r"$\phi$ [rad]", r"$I$ [A]")
 
-
-
-# # plt.plot(phi4, I4)
-# plt.show()
+# plt.savefig('FP4\ElOpt\Slike\V4.pdf', bbox_inches='tight', pad_inches=0.1)
+plt.show()
 
 
 
@@ -345,20 +354,35 @@ phi5 = unp.uarray(phi5, np.ones(np.shape(phi5))) * np.pi / 180
 I5 = unp.uarray(I5, np.ones(np.shape(I5)) * 0.2) * 10 ** (-6)
 
 
-def fun5(B, x):
+def fun5(x, a, b, c, d):
     n1 = 1.532
     n2 = 1.706
-    return B[0] + B[1] * (np.sin(18.1 * (np.sqrt(n1**2 - (np.sin((x/2) * np.pi/B[2]))**2 ) - np.sqrt(n2**2 - (np.sin((x/2) * np.pi/B[2]))**2 ))))**2
-# def fun5(B, x):
-#     n1 = 1
-#     n2 = 1
-#     return B[0] + B[1] * (np.sin(B[2] * (np.sqrt(n1**2 - (np.sin(np.pi/B[3] * (x - B[4])))**2 ) - np.sqrt(n2**2 - (np.sin(np.pi/B[3] * (x - B[4])))**2 ))))**2
+    return a + b * (np.sin(d * (np.sqrt(n1**2 - (np.sin((x/2) * np.pi/c))**2 ) - np.sqrt(n2**2 - (np.sin((x/2) * np.pi/c))**2 ))))**2
 
-fit5 = fit_napake2(phi5, I5, fun5)
 
-fit5.pprint()
+fit5 = opt.curve_fit(fun5, unp.nominal_values(phi5), unp.nominal_values(I5),
+                                          np.array([2 * 10**(-6), 8 * 10**(-5), 1.5, 18]),
+                                          bounds=(np.array([-15 * 10**(-6), 2 * 10**(-5), 1.2, 16]),
+                                                  np.array([15 * 10**(-6), 15 * 10**(-5), 1.9, 20])))
 
-graf_fit(phi5, I5, fit5, fun5, 1)
-# plt.plot(unp.nominal_values(phi5), fun5([0 * 10**(-6), 8 * 10**(-5), 18.2, 0, 1.5], unp.nominal_values(phi5)))
-plt.plot(unp.nominal_values(phi5), unp.nominal_values(I5), "o")
+plt.plot(unp.nominal_values(phi5), unp.nominal_values(I5), "o", label="Izmerjeno", color="black")
+
+x_limits = plt.xlim()
+y_limits = plt.ylim()
+
+graf_fit(phi5, I5, fit5, fun5)
+
+graf_oblika("Amplituda v odvisnosti od zasuka tekočih kristalov", r"$\phi$ [rad]", r"$I$ [A]")
+plt.ylim(y_limits)
+plt.xlim(x_limits)
+
+# plt.savefig('FP4\ElOpt\Slike\V5.pdf', bbox_inches='tight', pad_inches=0.1)
 plt.show()
+
+print(f"Fit 1. grafa: {unp.uarray(fit1.beta, fit1.sd_beta)}\n")
+print(f"Fit 2. grafa: {unp.uarray(fit2.beta, fit2.sd_beta)}\n")
+print(f"Fit 3. grafa: {unp.uarray(fit3.beta, fit3.sd_beta)}\n")
+print(f"Fit 4. grafa: {unp.uarray(fit4.beta, fit4.sd_beta)}\n")
+print(f"Fit 5. grafa: {unp.uarray(fit5[0], np.sqrt(np.diagonal(fit5[1])))}")
+
+# print(np.trace(fit+5[1]))
