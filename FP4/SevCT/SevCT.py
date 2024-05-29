@@ -185,6 +185,8 @@ P_cel = (4 * np.pi * (unc.ufloat(34, 0.5) + unc.ufloat(1.95, 0.01)) ** 2) * P_m 
 
 graf_errorbar(P_el, P_cel, "Neovirano")
 
+fit1 = fit_napake_x(P_el, P_cel, lin_fun)
+
 
 U_ok = unp.uarray([230.2, 222.2, 215.2, 208, 200, 192.6, 184.6, 177, 168.4, 160, 151.0, 142, 132, 123, 113, 102, 91, 78, 65, 49, 32, 0],
                   np.ones(np.shape(np.array([230, 223, 215, 208, 200, 193, 185, 177.2, 168, 159.1, 150.5, 142.3, 132.8, 123.1, 113.1, 101.6, 90.7, 78.1, 63.9, 49.5, 31.6, 0]))) * 0.3)
@@ -211,8 +213,12 @@ graf_oblika(r"Oddana moč žarnice v odvisnosti od električne moči", r"$P_{el}
 plt.ylim(y_limits)
 plt.xlim(x_limits)
 
+graf_fit(P_el, P_cel, fit1, "")
+
 plt.savefig(r"FP4\SevCT\Slike\Moc.pdf", bbox_inches='tight', pad_inches=0.1)
 plt.show()
+
+print(f"izkoristek: {unc.ufloat(fit1[0][0], np.sqrt(fit1[1][0][0]))}")
 
 
 
@@ -242,6 +248,8 @@ graf_oblika(r"Upornost nitke v odvisnosti od temperature", r"$T$ [K]", r"$R$ [$\
 
 plt.savefig(r"FP4\SevCT\Slike\Upornost.pdf", bbox_inches='tight', pad_inches=0.1)
 plt.show()
+
+print(f"Upor/T: {unc.ufloat(fit_R_T.beta[0], fit_R_T.sd_beta[0])}")
 
 
 
